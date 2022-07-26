@@ -26,11 +26,10 @@ void TempPopulateGrid() {
 	}
 }
 
-void DrawIconGrid(Texture2D sheet) {
+void DrawIconGrid(Texture2D sheet, int frame) {
 	for (int a=0; a<6; a++) {
-		for (int b=0; b<5; b++) {
-			DrawTextureRec(sheet, (Rectangle){grid[a][b]*10, 0, 10, 10}, (Vector2){a*10, b*10}, WHITE);
-		}
+		for (int b=0; b<5; b++)
+		DrawTextureRec(sheet, (Rectangle){grid[a][b]*10, frame*10, 10, 10}, (Vector2){a*10, b*10}, WHITE);
 	}
 }
 
@@ -40,10 +39,14 @@ void DrawIconGrid(Texture2D sheet) {
 
 int main() {
 
+	// Variables
+	float animTick = 0;
+	const float animRate = 0.04;
+	int animFrame = 0;
+
 	// Init Window Stuff
-	const char windowed = 0; // Make 0 for Fullscreen
-	float scale;
-	float playAreaX;
+	const char windowed = 10; // Make 0 for Fullscreen
+	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
 		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLEX");
@@ -71,13 +74,18 @@ int main() {
     while (!WindowShouldClose()) {
 
         // UPDATE
+		animTick += animRate;
+		if (animTick > 1) {
+			animTick = 0;
+			animFrame = !animFrame;
+		}
 
 		// TEXTURE DRAW
 		BeginTextureMode(target);
 		
 			// DRAW EVERYTHING HERE
 			ClearBackground((Color){33, 33, 33, 255});
-			DrawIconGrid(TX_sprites);
+			DrawIconGrid(TX_sprites, animFrame);
 			DrawTexture(TX_hud, 0, 50, WHITE);
 		
 		EndTextureMode();
