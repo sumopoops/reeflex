@@ -21,17 +21,15 @@ Texture2D textures[10];
 void TempPopulateGrid() {
 	for (int a=0; a<6; a++) {
 		for (int b=0; b<5; b++) {
-			grid[a][b] = 1;
+			grid[a][b] = GetRandomValue(0, 5);
 		}
 	}
 }
 
-void DrawIconGrid() {
+void DrawIconGrid(Texture2D sheet) {
 	for (int a=0; a<6; a++) {
 		for (int b=0; b<5; b++) {
-			//if (!grid[a][b]) break;
-			DrawTexture(textures[grid[a][b]], a*10, b*10, WHITE);
-			//printf("Grid Value: %d\n\n", grid[a][b]);
+			DrawTextureRec(sheet, (Rectangle){grid[a][b]*10, 0, 10, 10}, (Vector2){a*10, b*10}, WHITE);
 		}
 	}
 }
@@ -43,16 +41,16 @@ void DrawIconGrid() {
 int main() {
 
 	// Init Window Stuff
-	const char windowed = 10; // Make 0 for Fullscreen
+	const char windowed = 0; // Make 0 for Fullscreen
 	float scale;
 	float playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
-		InitWindow(screenWidth*windowed, screenHeight*windowed, "Invade");
+		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLEX");
 		scale = (float)windowed;
 		playAreaX = 0;
 	} else {
-		InitWindow(GetScreenWidth(), GetScreenHeight(), "Invade");
+		InitWindow(GetScreenWidth(), GetScreenHeight(), "REEFLEX");
 		scale = (float)GetScreenHeight()/screenHeight;
 		playAreaX = (float)(GetScreenWidth()-(screenWidth*scale))*0.5;
 		ToggleFullscreen();
@@ -60,7 +58,6 @@ int main() {
 	HideCursor();
 
 	// Load assets
-	textures[1] = LoadTexture("img/1.png");
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Texture2D TX_logo = LoadTexture("img/logo.png");
 	Texture2D TX_hud = LoadTexture("img/hud.png");
@@ -80,20 +77,15 @@ int main() {
 		
 			// DRAW EVERYTHING HERE
 			ClearBackground((Color){33, 33, 33, 255});
-			DrawIconGrid();
+			DrawIconGrid(TX_sprites);
 			DrawTexture(TX_hud, 0, 50, WHITE);
 		
 		EndTextureMode();
 
 		// DRAW
         BeginDrawing();
-
-			ClearBackground(BLACK);
-			
-			// Draw the RenderTexture scaled
-			DrawTexturePro(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight}, (Rectangle){playAreaX, 0, screenWidth*scale, screenHeight*scale}, (Vector2){0, 0}, 0, WHITE);
-			
-
+		ClearBackground(BLACK);
+		DrawTexturePro(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight}, (Rectangle){playAreaX, 0, screenWidth*scale, screenHeight*scale}, (Vector2){0, 0}, 0, WHITE);
         EndDrawing();
     }
 
