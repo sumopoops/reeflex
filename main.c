@@ -11,6 +11,12 @@ typedef struct Sprite {
 
 
 
+//---------------------------------------------------------------------------------------- ENUMS
+
+enum gameModes {GAMEMODE_TITLE, GAMEMODE_GAME};
+
+
+
 //---------------------------------------------------------------------------------------- GLOBALS
 
 const int screenWidth = 60;
@@ -49,9 +55,10 @@ int main() {
 	int animFrame = 0;
 	int targets = 6;
 	int remainingTargets = 3;
+	unsigned char gameMode = GAMEMODE_GAME;
 
 	// Init Window Stuff
-	const char windowed = 10; // Make 0 for Fullscreen
+	const char windowed = 13; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -73,8 +80,8 @@ int main() {
 
 	// Sprites
 	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
-	Sprite SP_dot1 = {&TX_sprites, {0, 30, 2, 2}};
-	Sprite SP_dot2 = {&TX_sprites, {2, 30, 2, 2}};
+	Sprite SP_dot1 = {&TX_sprites, {0, 30, 2, 2}, {0, 0}};
+	Sprite SP_dot2 = {&TX_sprites, {2, 30, 2, 2}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -85,21 +92,36 @@ int main() {
     while (!WindowShouldClose()) {
 
         // UPDATE
-		animTick += animRate;
-		if (animTick > 1) {
-			animTick = 0;
-			animFrame = !animFrame;
+		if (gameMode == GAMEMODE_GAME) {
+
+			animTick += animRate;
+			if (animTick > 1) {
+				animTick = 0;
+				animFrame = !animFrame;
+			}
+
 		}
+		
 
 		// TEXTURE DRAW
 		BeginTextureMode(target);
 		
 			// DRAW EVERYTHING HERE
 			ClearBackground((Color){33, 33, 33, 255});
-			DrawIconGrid(TX_sprites, animFrame);
-			DrawTextureRec(*SP_hud.tx, SP_hud.rec, SP_hud.loc, WHITE);
-			for (int i=0; i<remainingTargets; i++)
-			DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*3), 53}, WHITE);
+
+			if (gameMode == GAMEMODE_TITLE) {
+
+				DrawTexture(TX_logo, 0, 0, WHITE);
+
+			} else if (gameMode == GAMEMODE_GAME) {
+
+				DrawIconGrid(TX_sprites, animFrame);
+				DrawTextureRec(*SP_hud.tx, SP_hud.rec, SP_hud.loc, WHITE);
+				for (int i=0; i<remainingTargets; i++)
+				DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*3), 53}, WHITE);
+
+			}
+			
 		
 		EndTextureMode();
 
