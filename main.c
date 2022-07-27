@@ -3,7 +3,11 @@
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
-
+typedef struct Sprite {
+	Texture2D* tx;
+	Rectangle rec;
+	Vector2 loc;
+} Sprite;
 
 
 
@@ -18,7 +22,7 @@ Texture2D textures[10];
 
 //---------------------------------------------------------------------------------------- FUNCTIONS
 
-void TempPopulateGrid() {
+void PopulateGrid() {
 	for (int a=0; a<6; a++) {
 		for (int b=0; b<5; b++) {
 			grid[a][b] = GetRandomValue(0, 5);
@@ -43,6 +47,8 @@ int main() {
 	float animTick = 0;
 	const float animRate = 0.04;
 	int animFrame = 0;
+	int targets = 6;
+	int remainingTargets = 3;
 
 	// Init Window Stuff
 	const char windowed = 10; // Make 0 for Fullscreen
@@ -65,11 +71,16 @@ int main() {
 	Texture2D TX_logo = LoadTexture("img/logo.png");
 	Texture2D TX_hud = LoadTexture("img/hud.png");
 
+	// Sprites
+	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
+	Sprite SP_dot1 = {&TX_sprites, {0, 30, 2, 2}};
+	Sprite SP_dot2 = {&TX_sprites, {2, 30, 2, 2}};
+
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
 
 	// Init
-	TempPopulateGrid();
+	PopulateGrid();
 
     while (!WindowShouldClose()) {
 
@@ -86,7 +97,9 @@ int main() {
 			// DRAW EVERYTHING HERE
 			ClearBackground((Color){33, 33, 33, 255});
 			DrawIconGrid(TX_sprites, animFrame);
-			DrawTexture(TX_hud, 0, 50, WHITE);
+			DrawTextureRec(*SP_hud.tx, SP_hud.rec, SP_hud.loc, WHITE);
+			for (int i=0; i<remainingTargets; i++)
+			DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*3), 53}, WHITE);
 		
 		EndTextureMode();
 
