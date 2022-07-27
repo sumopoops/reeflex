@@ -57,8 +57,8 @@ int main() {
 		scale = (float)GetScreenHeight()/screenHeight;
 		playAreaX = (float)(GetScreenWidth()-(screenWidth*scale))*0.5;
 		ToggleFullscreen();
+		HideCursor();
 	}
-	HideCursor();
 
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
