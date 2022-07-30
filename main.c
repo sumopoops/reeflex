@@ -24,19 +24,41 @@ const int screenHeight = 60;
 int grid[6][5];
 Texture2D textures[10];
 int types[5] = {0, 0, 0, 0, 0};
+int remainingTargets = 0;
+int currentLevel = 5;
 
 
 
 //---------------------------------------------------------------------------------------- FUNCTIONS
 
 void PopulateGrid() {
-	for (int a=0; a<6; a++) {
-		for (int b=0; b<5; b++) {
-			int type = GetRandomValue(0, 5);
-			if (type != 0) types[type-1]++;
-			grid[a][b] = type;
+	int type, x, y;
+	while (remainingTargets < currentLevel) {
+		x = GetRandomValue(0, 6);
+		y = GetRandomValue(0, 5);
+		if (grid[x][y]) continue;
+		type = GetRandomValue(1, 5);
+		grid[x][y] = type;
+		types[type-1]++;
+		remainingTargets++;
+	}
+}
+
+void ClearGrid() {
+	for (int y=0; y<5; y++)
+	for (int x=0; x<6; x++)
+	grid[x][y] = 0;
+	remainingTargets = 0;
+}
+
+void PrintGrid() {
+	for (int y=0; y<5; y++) {
+		printf("\n");
+		for (int x=0; x<6; x++) {
+			printf("%d, ", grid[y][x]);
 		}
 	}
+	printf("\n\n");
 }
 
 void DrawIconGrid(Texture2D sheet, int frame) {
@@ -56,14 +78,12 @@ int main() {
 	float animTick = 0;
 	const float animRate = 0.04;
 	int animFrame = 0;
-	int targets = 6;
-	int remainingTargets = 3;
+	//int targets = 6;
 	unsigned char gameMode = GAMEMODE_GAME;
 	float timeLeft = 56;
-	int currentLevel = 0;
 
 	// Levels
-	float levels[] = {0.06, 0.09, 0.12, 0.15};
+	//float levels[] = {0.06, 0.09, 0.12, 0.15};
 
 	// Init Window Stuff
 	const char windowed = 13; // Make 0 for Fullscreen
@@ -84,19 +104,20 @@ int main() {
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Texture2D TX_logo = LoadTexture("img/logo.png");
-	Texture2D TX_hud = LoadTexture("img/hud.png");
 
 	// Sprites
 	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
-	Sprite SP_dot1 = {&TX_sprites, {0, 30, 2, 2}, {0, 0}};
-	Sprite SP_dot2 = {&TX_sprites, {2, 30, 2, 2}, {0, 0}};
+	Sprite SP_dot1 = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
+	//Sprite SP_dot2 = {&TX_sprites, {2, 30, 1, 2}, {0, 0}};
 	Sprite SP_timeDot = {&TX_sprites, {2, 30, 1, 1}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
 
 	// Init
+	ClearGrid();
 	PopulateGrid();
+	PrintGrid();
 
     while (!WindowShouldClose()) {
 
@@ -109,8 +130,8 @@ int main() {
 				animFrame = !animFrame;
 			}
 
-			timeLeft -= levels[currentLevel];
-			printf("TYPES: %d, %d, %d, %d, %d\n", types[0], types[1], types[2], types[3], types[4]); //TEMP
+			timeLeft -= 0.06;
+			//printf("TYPES: %d, %d, %d, %d, %d\n", types[0], types[1], types[2], types[3], types[4]); //TEMP
 
 		}
 		
@@ -132,7 +153,7 @@ int main() {
 
 				// Draw target tracker
 				for (int i=0; i<remainingTargets; i++)
-				DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*3), 53}, WHITE);
+				DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*2), 53}, WHITE);
 
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
