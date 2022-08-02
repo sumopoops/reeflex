@@ -25,7 +25,7 @@ int grid[6][5];
 Texture2D textures[10];
 int types[5] = {0, 0, 0, 0, 0};
 int remainingTargets = 0;
-int currentLevel = 5;
+int currentLevel = 10;
 
 
 
@@ -36,7 +36,9 @@ void PopulateGrid() {
 	while (remainingTargets < currentLevel) {
 		x = GetRandomValue(0, 6);
 		y = GetRandomValue(0, 5);
-		if (grid[x][y]) continue;
+		if (grid[y][x]) {
+			continue;
+		}
 		type = GetRandomValue(1, 5);
 		grid[x][y] = type;
 		types[type-1]++;
@@ -62,9 +64,11 @@ void PrintGrid() {
 }
 
 void DrawIconGrid(Texture2D sheet, int frame) {
-	for (int a=0; a<6; a++) {
-		for (int b=0; b<5; b++)
-		DrawTextureRec(sheet, (Rectangle){grid[a][b]*10, frame*10, 10, 10}, (Vector2){a*10, b*10}, WHITE);
+	for (int y=0; y<6; y++) {
+		for (int x=0; x<5; x++) {
+			if (grid[y][x])
+			DrawTextureRec(sheet, (Rectangle){grid[y][x]*10, frame*10, 10, 10}, (Vector2){y*10, x*10}, WHITE);
+		}
 	}
 }
 
