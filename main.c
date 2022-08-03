@@ -23,7 +23,7 @@ const int screenWidth = 60;
 const int screenHeight = 60;
 int grid[6][5];
 Texture2D textures[10];
-int types[5] = {0, 0, 0, 0, 0};
+int types[6] = {0, 0, 0, 0, 0};
 int remainingTargets = 0;
 int currentLevel = 10;
 
@@ -82,15 +82,11 @@ int main() {
 	float animTick = 0;
 	const float animRate = 0.04;
 	int animFrame = 0;
-	//int targets = 6;
 	unsigned char gameMode = GAMEMODE_GAME;
 	float timeLeft = 56;
 
-	// Levels
-	//float levels[] = {0.06, 0.09, 0.12, 0.15};
-
 	// Init Window Stuff
-	const char windowed = 13; // Make 0 for Fullscreen
+	const char windowed = 0; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -112,8 +108,13 @@ int main() {
 	// Sprites
 	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
 	Sprite SP_dot1 = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
-	//Sprite SP_dot2 = {&TX_sprites, {2, 30, 1, 2}, {0, 0}};
 	Sprite SP_timeDot = {&TX_sprites, {2, 30, 1, 1}, {0, 0}};
+	Sprite SP_letter_A = {&TX_sprites, {5, 30, 3, 5}, {0, 0}};
+	Sprite SP_letter_S = {&TX_sprites, {10, 30, 3, 5}, {0, 0}};
+	Sprite SP_letter_D = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
+	Sprite SP_letter_J = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
+	Sprite SP_letter_K = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
+	Sprite SP_letter_L = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -128,14 +129,39 @@ int main() {
         // UPDATE
 		if (gameMode == GAMEMODE_GAME) {
 
+			// Animation tick
 			animTick += animRate;
 			if (animTick > 1) {
 				animTick = 0;
 				animFrame = !animFrame;
 			}
 
+			// Keyboard input
+			switch (GetKeyPressed()) {
+				case KEY_A:
+					printf("A PRESSED\n");
+					ClearGrid();
+					PopulateGrid();
+					break;
+				case KEY_S:
+					printf("S PRESSED\n");
+					break;
+				case KEY_D:
+					printf("D PRESSED\n");
+					break;
+				case KEY_J:
+					printf("J PRESSED\n");
+					break;
+				case KEY_K:
+					printf("K PRESSED\n");
+					break;
+				case KEY_L:
+					printf("L PRESSED\n");
+					break;
+			}
+
 			timeLeft -= 0.06;
-			//printf("TYPES: %d, %d, %d, %d, %d\n", types[0], types[1], types[2], types[3], types[4]); //TEMP
+			printf("TYPES: %d, %d, %d, %d, %d, %d\n", types[0], types[1], types[2], types[3], types[4], types[5]); //TEMP
 
 		}
 		
@@ -159,10 +185,12 @@ int main() {
 				for (int i=0; i<remainingTargets; i++)
 				DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*2), 53}, WHITE);
 
+				// Temp draw letters
+				DrawTextureRec(*SP_letter_A.tx, SP_letter_A.rec, (Vector2){0, 0}, WHITE);
+
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
 				DrawTextureRec(*SP_timeDot.tx, SP_timeDot.rec, (Vector2){2+i, 57}, WHITE);
-
 
 			}
 			
