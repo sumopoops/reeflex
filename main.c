@@ -7,13 +7,14 @@ typedef struct Sprite {
 	Texture2D* tx;
 	Rectangle rec;
 	Vector2 loc;
+	bool anim;
 } Sprite;
 
 
 
 //---------------------------------------------------------------------------------------- ENUMS
 
-enum gameModes {GAMEMODE_TITLE, GAMEMODE_GAME};
+enum gameModes {GAMEMODE_TITLE, GAMEMODE_GAME, GAMEMODE_HELP};
 
 
 
@@ -39,7 +40,7 @@ void PopulateGrid() {
 		if (grid[y][x]) {
 			continue;
 		}
-		type = GetRandomValue(1, 5);
+		type = GetRandomValue(1, 6);
 		grid[x][y] = type;
 		types[type-1]++;
 		remainingTargets++;
@@ -82,11 +83,11 @@ int main() {
 	float animTick = 0;
 	const float animRate = 0.04;
 	int animFrame = 0;
-	unsigned char gameMode = GAMEMODE_GAME;
+	unsigned char gameMode = GAMEMODE_TITLE;
 	float timeLeft = 56;
 
 	// Init Window Stuff
-	const char windowed = 0; // Make 0 for Fullscreen
+	const char windowed = 13; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -106,15 +107,17 @@ int main() {
 	Texture2D TX_logo = LoadTexture("img/logo.png");
 
 	// Sprites
+	Sprite SP_types = {&TX_sprites, {0, 0, 60, 10}, {0, 18}};
 	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
-	Sprite SP_dot1 = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
+	//Sprite SP_dot1 = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
+	Sprite SP_dot2 = {&TX_sprites, {1, 30, 1, 2}, {0, 0}};
 	Sprite SP_timeDot = {&TX_sprites, {2, 30, 1, 1}, {0, 0}};
-	Sprite SP_letter_A = {&TX_sprites, {5, 30, 3, 5}, {0, 0}};
-	Sprite SP_letter_S = {&TX_sprites, {10, 30, 3, 5}, {0, 0}};
-	Sprite SP_letter_D = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
-	Sprite SP_letter_J = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
-	Sprite SP_letter_K = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
-	Sprite SP_letter_L = {&TX_sprites, {15, 30, 3, 5}, {0, 0}};
+	Sprite SP_letter_A = {&TX_sprites, {3, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_S = {&TX_sprites, {7, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_D = {&TX_sprites, {11, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_J = {&TX_sprites, {15, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_K = {&TX_sprites, {19, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_L = {&TX_sprites, {23, 35, 3, 5}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -127,7 +130,13 @@ int main() {
     while (!WindowShouldClose()) {
 
         // UPDATE
-		if (gameMode == GAMEMODE_GAME) {
+		if (gameMode == GAMEMODE_TITLE) {
+
+			if (IsKeyPressed(KEY_ENTER)) {
+				gameMode = GAMEMODE_HELP;
+			}
+
+		} else if (gameMode == GAMEMODE_GAME) {
 
 			// Animation tick
 			animTick += animRate;
@@ -163,6 +172,12 @@ int main() {
 			timeLeft -= 0.06;
 			printf("TYPES: %d, %d, %d, %d, %d, %d\n", types[0], types[1], types[2], types[3], types[4], types[5]); //TEMP
 
+		} else if (gameMode == GAMEMODE_HELP) {
+
+			if (IsKeyPressed(KEY_ENTER)) {
+				gameMode = GAMEMODE_GAME;
+			}
+
 		}
 		
 
@@ -176,6 +191,19 @@ int main() {
 
 				DrawTexture(TX_logo, 0, 0, WHITE);
 
+			} else if (gameMode == GAMEMODE_HELP) {
+
+				// Draw enemy types
+				DrawTextureRec(*SP_types.tx, SP_types.rec, SP_types.loc, WHITE);
+
+				// Temp draw letters
+				DrawTextureRec(*SP_letter_A.tx, SP_letter_A.rec, (Vector2){4, 30}, WHITE);
+				DrawTextureRec(*SP_letter_S.tx, SP_letter_S.rec, (Vector2){14, 30}, WHITE);
+				DrawTextureRec(*SP_letter_D.tx, SP_letter_S.rec, (Vector2){24, 30}, WHITE);
+				DrawTextureRec(*SP_letter_J.tx, SP_letter_J.rec, (Vector2){34, 30}, WHITE);
+				DrawTextureRec(*SP_letter_K.tx, SP_letter_K.rec, (Vector2){44, 30}, WHITE);
+				DrawTextureRec(*SP_letter_L.tx, SP_letter_L.rec, (Vector2){54, 30}, WHITE);
+
 			} else if (gameMode == GAMEMODE_GAME) {
 
 				DrawIconGrid(TX_sprites, animFrame);
@@ -183,10 +211,7 @@ int main() {
 
 				// Draw target tracker
 				for (int i=0; i<remainingTargets; i++)
-				DrawTextureRec(*SP_dot1.tx, SP_dot1.rec, (Vector2){1+(i*2), 53}, WHITE);
-
-				// Temp draw letters
-				DrawTextureRec(*SP_letter_A.tx, SP_letter_A.rec, (Vector2){0, 0}, WHITE);
+				DrawTextureRec(*SP_dot2.tx, SP_dot2.rec, (Vector2){1+(i*2), 53}, WHITE);
 
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
