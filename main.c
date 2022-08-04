@@ -1,5 +1,7 @@
 #include "raylib.h"
 #include <stdio.h>
+#define GRID_WIDTH 6
+#define GRID_HEIGHT 5
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -22,11 +24,11 @@ enum gameModes {GAMEMODE_TITLE, GAMEMODE_GAME, GAMEMODE_HELP};
 
 const int screenWidth = 60;
 const int screenHeight = 60;
-int grid[6][5];
+int grid[GRID_HEIGHT][GRID_WIDTH];
 Texture2D textures[10];
-int types[6] = {0, 0, 0, 0, 0};
+int types[6] = {0, 0, 0, 0, 0, 0};
 int remainingTargets = 0;
-int currentLevel = 10;
+int currentLevel = 5;
 
 
 
@@ -35,40 +37,39 @@ int currentLevel = 10;
 void PopulateGrid() {
 	int type, x, y;
 	while (remainingTargets < currentLevel) {
-		x = GetRandomValue(0, 6);
-		y = GetRandomValue(0, 5);
-		if (grid[y][x]) {
-			continue;
-		}
+		y = GetRandomValue(0, GRID_HEIGHT-1);
+		x = GetRandomValue(0, GRID_WIDTH-1);
+		if (grid[y][x]) continue;
 		type = GetRandomValue(1, 6);
-		grid[x][y] = type;
+		grid[y][x] = type;
 		types[type-1]++;
 		remainingTargets++;
 	}
 }
 
 void ClearGrid() {
-	for (int y=0; y<5; y++)
-	for (int x=0; x<6; x++)
-	grid[x][y] = 0;
+	for (int y=0; y<GRID_HEIGHT; y++)
+	for (int x=0; x<GRID_WIDTH; x++)
+	grid[y][x] = 0;
 	remainingTargets = 0;
+	for (int i=0; i<6; i++) types[i] = 0;
 }
 
 void PrintGrid() {
-	for (int y=0; y<5; y++) {
+	for (int y=0; y<GRID_HEIGHT; y++) {
 		printf("\n");
-		for (int x=0; x<6; x++) {
-			printf("%d, ", grid[y][x]);
+		for (int x=0; x<GRID_WIDTH; x++) {
+			printf("%d ", grid[y][x]);
 		}
 	}
 	printf("\n\n");
 }
 
 void DrawIconGrid(Texture2D sheet, int frame) {
-	for (int y=0; y<6; y++) {
-		for (int x=0; x<5; x++) {
+	for (int y=0; y<GRID_HEIGHT; y++) {
+		for (int x=0; x<GRID_WIDTH; x++) {
 			if (grid[y][x])
-			DrawTextureRec(sheet, (Rectangle){grid[y][x]*10, frame*10, 10, 10}, (Vector2){y*10, x*10}, WHITE);
+			DrawTextureRec(sheet, (Rectangle){grid[y][x]*10, frame*10, 10, 10}, (Vector2){x*10, y*10}, WHITE);
 		}
 	}
 }
@@ -83,7 +84,7 @@ int main() {
 	float animTick = 0;
 	const float animRate = 0.04;
 	int animFrame = 0;
-	unsigned char gameMode = GAMEMODE_TITLE;
+	unsigned char gameMode = GAMEMODE_GAME;
 	float timeLeft = 56;
 
 	// Init Window Stuff
@@ -199,7 +200,7 @@ int main() {
 				// Temp draw letters
 				DrawTextureRec(*SP_letter_A.tx, SP_letter_A.rec, (Vector2){4, 30}, WHITE);
 				DrawTextureRec(*SP_letter_S.tx, SP_letter_S.rec, (Vector2){14, 30}, WHITE);
-				DrawTextureRec(*SP_letter_D.tx, SP_letter_S.rec, (Vector2){24, 30}, WHITE);
+				DrawTextureRec(*SP_letter_D.tx, SP_letter_D.rec, (Vector2){24, 30}, WHITE);
 				DrawTextureRec(*SP_letter_J.tx, SP_letter_J.rec, (Vector2){34, 30}, WHITE);
 				DrawTextureRec(*SP_letter_K.tx, SP_letter_K.rec, (Vector2){44, 30}, WHITE);
 				DrawTextureRec(*SP_letter_L.tx, SP_letter_L.rec, (Vector2){54, 30}, WHITE);
