@@ -10,6 +10,8 @@ typedef struct Sprite {
 	Rectangle rec;
 	Vector2 loc;
 	bool anim;
+	int frames;
+	Vector2 frameAjustment;
 } Sprite;
 
 
@@ -47,6 +49,10 @@ void PopulateGrid() {
 	}
 }
 
+bool AddSprite(Sprite newSprite) {
+	return true;
+}
+
 void ClearGrid() {
 	for (int y=0; y<GRID_HEIGHT; y++)
 	for (int x=0; x<GRID_WIDTH; x++)
@@ -63,6 +69,7 @@ void PrintGrid() {
 		}
 	}
 	printf("\n\n");
+	printf("TYPES: \33[31m%d, %d, %d, %d, %d, %d\33[0m\n", types[0], types[1], types[2], types[3], types[4], types[5]); //TEMP
 }
 
 void DrawIconGrid(Texture2D sheet, int frame) {
@@ -81,14 +88,14 @@ void DrawIconGrid(Texture2D sheet, int frame) {
 int main() {
 
 	// Variables
-	float animTick = 0;
 	const float animRate = 0.04;
-	int animFrame = 0;
 	unsigned char gameMode = GAMEMODE_GAME;
+	float animTick = 0;
+	int animFrame = 0;
 	float timeLeft = 56;
 
 	// Init Window Stuff
-	const char windowed = 13; // Make 0 for Fullscreen
+	const char windowed = 15; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -110,9 +117,8 @@ int main() {
 	// Sprites
 	Sprite SP_types = {&TX_sprites, {0, 0, 60, 10}, {0, 18}};
 	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
-	//Sprite SP_dot1 = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
-	Sprite SP_dot2 = {&TX_sprites, {1, 30, 1, 2}, {0, 0}};
-	Sprite SP_timeDot = {&TX_sprites, {2, 30, 1, 1}, {0, 0}};
+	Sprite SP_targetRem = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
+	Sprite SP_timeDot = {&TX_sprites, {1, 30, 1, 1}, {0, 0}};
 	Sprite SP_letter_A = {&TX_sprites, {3, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_S = {&TX_sprites, {7, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_D = {&TX_sprites, {11, 35, 3, 5}, {0, 0}};
@@ -122,6 +128,7 @@ int main() {
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
+	SetWindowPosition(500, 300);
 
 	// Init
 	ClearGrid();
@@ -171,7 +178,6 @@ int main() {
 			}
 
 			timeLeft -= 0.06;
-			printf("TYPES: %d, %d, %d, %d, %d, %d\n", types[0], types[1], types[2], types[3], types[4], types[5]); //TEMP
 
 		} else if (gameMode == GAMEMODE_HELP) {
 
@@ -212,7 +218,7 @@ int main() {
 
 				// Draw target tracker
 				for (int i=0; i<remainingTargets; i++)
-				DrawTextureRec(*SP_dot2.tx, SP_dot2.rec, (Vector2){1+(i*2), 53}, WHITE);
+				DrawTextureRec(*SP_targetRem.tx, SP_targetRem.rec, (Vector2){1+(i*2), 53}, WHITE);
 
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
