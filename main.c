@@ -1,17 +1,20 @@
 #include "raylib.h"
 #include <stdio.h>
+#include <stdlib.h>
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
 typedef struct Sprite {
-	Texture2D* tx;
 	Rectangle rec;
 	Vector2 loc;
 	bool anim;
 	int frames;
 	Vector2 frameAjustment;
+	bool repeatAnim;
+	int id;
+	bool exists;
 } Sprite;
 
 
@@ -49,8 +52,8 @@ void PopulateGrid() {
 	}
 }
 
-bool AddSprite(Sprite newSprite) {
-	return true;
+void AddSprite(Sprite newSprite, Sprite spriteArray[]) {
+	
 }
 
 void ClearGrid() {
@@ -81,6 +84,25 @@ void DrawIconGrid(Texture2D sheet, int frame) {
 	}
 }
 
+Sprite BlankSprite() {
+	Sprite newBlankSprite;
+	newBlankSprite.exists = false;
+	newBlankSprite.rec = (Rectangle){0, 0, 0, 0};
+	newBlankSprite.loc = (Vector2){0, 0};
+	newBlankSprite.anim = false;
+	newBlankSprite.frames = 0;
+	newBlankSprite.frameAjustment = (Vector2){0, 0};
+	newBlankSprite.id = 0;
+	newBlankSprite.repeatAnim = false;
+	return newBlankSprite;
+}
+
+void InitSpriteArray(Sprite spriteArray[]) {
+	for (int i=0; i<(sizeof(*spriteArray)/sizeof(Sprite)); i++) {
+		spriteArray[i] = BlankSprite();
+	}
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -89,10 +111,12 @@ int main() {
 
 	// Variables
 	const float animRate = 0.04;
-	unsigned char gameMode = GAMEMODE_GAME;
+	unsigned char gameMode = GAMEMODE_TITLE;
 	float animTick = 0;
 	int animFrame = 0;
 	float timeLeft = 56;
+	Sprite sprites[100];
+	InitSpriteArray(sprites); //TEMP
 
 	// Init Window Stuff
 	const char windowed = 15; // Make 0 for Fullscreen
@@ -112,19 +136,19 @@ int main() {
 
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
-	Texture2D TX_logo = LoadTexture("img/logo.png");
 
 	// Sprites
-	Sprite SP_types = {&TX_sprites, {0, 0, 60, 10}, {0, 18}};
-	Sprite SP_hud = {&TX_sprites, {0, 20, 60, 10}, {0, 50}};
-	Sprite SP_targetRem = {&TX_sprites, {0, 30, 1, 2}, {0, 0}};
-	Sprite SP_timeDot = {&TX_sprites, {1, 30, 1, 1}, {0, 0}};
-	Sprite SP_letter_A = {&TX_sprites, {3, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_S = {&TX_sprites, {7, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_D = {&TX_sprites, {11, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_J = {&TX_sprites, {15, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_K = {&TX_sprites, {19, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_L = {&TX_sprites, {23, 35, 3, 5}, {0, 0}};
+	Sprite SP_types = {{0, 0, 60, 10}, {0, 18}};
+	Sprite SP_logo = {{0, 40, 58, 16}, {1, 16}};
+	Sprite SP_hud = {{0, 20, 60, 10}, {0, 50}};
+	Sprite SP_targetRem = {{0, 30, 1, 2}, {0, 0}};
+	Sprite SP_timeDot = {{1, 30, 1, 1}, {0, 0}};
+	Sprite SP_letter_A = {{3, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_S = {{7, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_D = {{11, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_J = {{15, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
+	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -196,33 +220,33 @@ int main() {
 
 			if (gameMode == GAMEMODE_TITLE) {
 
-				DrawTexture(TX_logo, 0, 0, WHITE);
+				DrawTextureRec(TX_sprites, SP_logo.rec, SP_logo.loc, WHITE);
 
 			} else if (gameMode == GAMEMODE_HELP) {
 
 				// Draw enemy types
-				DrawTextureRec(*SP_types.tx, SP_types.rec, SP_types.loc, WHITE);
+				DrawTextureRec(TX_sprites, SP_types.rec, SP_types.loc, WHITE);
 
 				// Temp draw letters
-				DrawTextureRec(*SP_letter_A.tx, SP_letter_A.rec, (Vector2){4, 30}, WHITE);
-				DrawTextureRec(*SP_letter_S.tx, SP_letter_S.rec, (Vector2){14, 30}, WHITE);
-				DrawTextureRec(*SP_letter_D.tx, SP_letter_D.rec, (Vector2){24, 30}, WHITE);
-				DrawTextureRec(*SP_letter_J.tx, SP_letter_J.rec, (Vector2){34, 30}, WHITE);
-				DrawTextureRec(*SP_letter_K.tx, SP_letter_K.rec, (Vector2){44, 30}, WHITE);
-				DrawTextureRec(*SP_letter_L.tx, SP_letter_L.rec, (Vector2){54, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_A.rec, (Vector2){4, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_S.rec, (Vector2){14, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_D.rec, (Vector2){24, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_J.rec, (Vector2){34, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_K.rec, (Vector2){44, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_L.rec, (Vector2){54, 30}, WHITE);
 
 			} else if (gameMode == GAMEMODE_GAME) {
 
 				DrawIconGrid(TX_sprites, animFrame);
-				DrawTextureRec(*SP_hud.tx, SP_hud.rec, SP_hud.loc, WHITE);
+				DrawTextureRec(TX_sprites, SP_hud.rec, SP_hud.loc, WHITE);
 
 				// Draw target tracker
 				for (int i=0; i<remainingTargets; i++)
-				DrawTextureRec(*SP_targetRem.tx, SP_targetRem.rec, (Vector2){1+(i*2), 53}, WHITE);
+				DrawTextureRec(TX_sprites, SP_targetRem.rec, (Vector2){1+(i*2), 53}, WHITE);
 
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
-				DrawTextureRec(*SP_timeDot.tx, SP_timeDot.rec, (Vector2){2+i, 57}, WHITE);
+				DrawTextureRec(TX_sprites, SP_timeDot.rec, (Vector2){2+i, 57}, WHITE);
 
 			}
 			
