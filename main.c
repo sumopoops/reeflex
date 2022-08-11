@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
+#define ENEMY_TYPE_COUNT 4
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -31,7 +32,7 @@ const int screenWidth = 60;
 const int screenHeight = 60;
 int grid[GRID_HEIGHT][GRID_WIDTH];
 Texture2D textures[10];
-int types[6] = {0, 0, 0, 0, 0, 0};
+int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
 int currentLevel = 5;
 
@@ -45,7 +46,7 @@ void PopulateGrid() {
 		y = GetRandomValue(0, GRID_HEIGHT-1);
 		x = GetRandomValue(0, GRID_WIDTH-1);
 		if (grid[y][x]) continue;
-		type = GetRandomValue(1, 6);
+		type = GetRandomValue(1, ENEMY_TYPE_COUNT);
 		grid[y][x] = type;
 		types[type-1]++;
 		remainingTargets++;
@@ -61,7 +62,7 @@ void ClearGrid() {
 	for (int x=0; x<GRID_WIDTH; x++)
 	grid[y][x] = 0;
 	remainingTargets = 0;
-	for (int i=0; i<6; i++) types[i] = 0;
+	for (int i=0; i<ENEMY_TYPE_COUNT; i++) types[i] = 0;
 }
 
 void PrintGrid() {
@@ -71,8 +72,9 @@ void PrintGrid() {
 			printf("%d ", grid[y][x]);
 		}
 	}
-	printf("\n\n");
-	printf("TYPES: \33[31m%d, %d, %d, %d, %d, %d\33[0m\n", types[0], types[1], types[2], types[3], types[4], types[5]); //TEMP
+	printf("\n\nTYPES: \33[31m");
+	for (int i=0; i<ENEMY_TYPE_COUNT; i++) printf("%d ", types[i]);
+	printf("\33[0m\n");
 }
 
 void DrawIconGrid(Texture2D sheet, int frame) {
@@ -85,15 +87,7 @@ void DrawIconGrid(Texture2D sheet, int frame) {
 }
 
 Sprite BlankSprite() {
-	Sprite newBlankSprite;
-	newBlankSprite.exists = false;
-	newBlankSprite.rec = (Rectangle){0, 0, 0, 0};
-	newBlankSprite.loc = (Vector2){0, 0};
-	newBlankSprite.anim = false;
-	newBlankSprite.frames = 0;
-	newBlankSprite.frameAjustment = (Vector2){0, 0};
-	newBlankSprite.id = 0;
-	newBlankSprite.repeatAnim = false;
+	Sprite newBlankSprite = {0};
 	return newBlankSprite;
 }
 
@@ -138,15 +132,13 @@ int main() {
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 
 	// Sprites
-	Sprite SP_types = {{0, 0, 60, 10}, {0, 18}};
+	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
 	Sprite SP_logo = {{0, 40, 58, 16}, {1, 16}};
 	Sprite SP_hud = {{0, 20, 60, 10}, {0, 50}};
 	Sprite SP_targetRem = {{0, 30, 1, 2}, {0, 0}};
 	Sprite SP_timeDot = {{1, 30, 1, 1}, {0, 0}};
 	Sprite SP_letter_A = {{3, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_S = {{7, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_D = {{11, 35, 3, 5}, {0, 0}};
-	Sprite SP_letter_J = {{15, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
 
@@ -164,8 +156,11 @@ int main() {
         // UPDATE
 		if (gameMode == GAMEMODE_TITLE) {
 
-			if (IsKeyPressed(KEY_ENTER)) {
-				gameMode = GAMEMODE_HELP;
+			int keyPressed = GetKeyPressed();
+			switch (keyPressed) {
+				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					gameMode = GAMEMODE_HELP;
+					break;
 			}
 
 		} else if (gameMode == GAMEMODE_GAME) {
@@ -187,12 +182,6 @@ int main() {
 				case KEY_S:
 					printf("S PRESSED\n");
 					break;
-				case KEY_D:
-					printf("D PRESSED\n");
-					break;
-				case KEY_J:
-					printf("J PRESSED\n");
-					break;
 				case KEY_K:
 					printf("K PRESSED\n");
 					break;
@@ -205,8 +194,11 @@ int main() {
 
 		} else if (gameMode == GAMEMODE_HELP) {
 
-			if (IsKeyPressed(KEY_ENTER)) {
-				gameMode = GAMEMODE_GAME;
+			int keyPressed = GetKeyPressed();
+			switch (keyPressed) {
+				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					gameMode = GAMEMODE_GAME;
+					break;
 			}
 
 		}
@@ -228,12 +220,10 @@ int main() {
 				DrawTextureRec(TX_sprites, SP_types.rec, SP_types.loc, WHITE);
 
 				// Temp draw letters
-				DrawTextureRec(TX_sprites, SP_letter_A.rec, (Vector2){4, 30}, WHITE);
-				DrawTextureRec(TX_sprites, SP_letter_S.rec, (Vector2){14, 30}, WHITE);
-				DrawTextureRec(TX_sprites, SP_letter_D.rec, (Vector2){24, 30}, WHITE);
-				DrawTextureRec(TX_sprites, SP_letter_J.rec, (Vector2){34, 30}, WHITE);
-				DrawTextureRec(TX_sprites, SP_letter_K.rec, (Vector2){44, 30}, WHITE);
-				DrawTextureRec(TX_sprites, SP_letter_L.rec, (Vector2){54, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_A.rec, (Vector2){14, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_S.rec, (Vector2){24, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_K.rec, (Vector2){34, 30}, WHITE);
+				DrawTextureRec(TX_sprites, SP_letter_L.rec, (Vector2){44, 30}, WHITE);
 
 			} else if (gameMode == GAMEMODE_GAME) {
 
