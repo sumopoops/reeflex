@@ -34,7 +34,7 @@ int grid[GRID_HEIGHT][GRID_WIDTH];
 Texture2D textures[10];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
-int currentLevel = 5;
+int currentLevel = 6;
 
 
 
@@ -81,7 +81,7 @@ void DrawIconGrid(Texture2D sheet, int frame) {
 	for (int y=0; y<GRID_HEIGHT; y++) {
 		for (int x=0; x<GRID_WIDTH; x++) {
 			if (grid[y][x])
-			DrawTextureRec(sheet, (Rectangle){grid[y][x]*10, frame*10, 10, 10}, (Vector2){x*10, y*10}, WHITE);
+			DrawTextureRec(sheet, (Rectangle){(grid[y][x]-1)*10, frame*10, 10, 10}, (Vector2){x*10, y*10}, WHITE);
 		}
 	}
 }
@@ -156,11 +156,9 @@ int main() {
         // UPDATE
 		if (gameMode == GAMEMODE_TITLE) {
 
-			int keyPressed = GetKeyPressed();
-			switch (keyPressed) {
+			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 					gameMode = GAMEMODE_HELP;
-					break;
 			}
 
 		} else if (gameMode == GAMEMODE_GAME) {
@@ -194,11 +192,9 @@ int main() {
 
 		} else if (gameMode == GAMEMODE_HELP) {
 
-			int keyPressed = GetKeyPressed();
-			switch (keyPressed) {
+			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 					gameMode = GAMEMODE_GAME;
-					break;
 			}
 
 		}
