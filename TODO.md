@@ -4,3 +4,6 @@
 - [x] Make function for creating a new circle, return circle
 - [ ] Get something playable
 - [ ] Change enemies to look like keys being pressed
+- [ ] Array length variables
+- [ ] Load spritesheet inline?
+- [ ] Fix level reset bug

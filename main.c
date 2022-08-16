@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
@@ -28,7 +29,12 @@ typedef struct Circle {
 
 //---------------------------------------------------------------------------------------- ENUMS
 
-enum gameModes {GAMEMODE_TITLE, GAMEMODE_GAME, GAMEMODE_HELP};
+enum gameModes {
+	GAMEMODE_TITLE,
+	GAMEMODE_GAME,
+	GAMEMODE_HELP,
+	GAMEMODE_GAMEOVER
+};
 
 
 
@@ -40,13 +46,22 @@ int grid[GRID_HEIGHT][GRID_WIDTH];
 Texture2D textures[10];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
-int currentLevel = 6;
+int currentLevel = 3;
 
 
 
 //---------------------------------------------------------------------------------------- FUNCTIONS
 
-void PopulateGrid() {
+void ResetLevel() {
+
+	// Clear grid
+	for (int y=0; y<GRID_HEIGHT; y++) {
+		for (int x=0; x<GRID_WIDTH; x++) grid[y][x] = 0;
+	}
+	remainingTargets = 0;
+	for (int i=0; i<ENEMY_TYPE_COUNT; i++) types[i] = 0;
+
+	// Populate grid
 	int type, x, y;
 	while (remainingTargets < currentLevel) {
 		y = GetRandomValue(0, GRID_HEIGHT-1);
@@ -61,14 +76,6 @@ void PopulateGrid() {
 
 void AddSprite(Sprite newSprite, Sprite spriteArray[]) {
 	
-}
-
-void ClearGrid() {
-	for (int y=0; y<GRID_HEIGHT; y++)
-	for (int x=0; x<GRID_WIDTH; x++)
-	grid[y][x] = 0;
-	remainingTargets = 0;
-	for (int i=0; i<ENEMY_TYPE_COUNT; i++) types[i] = 0;
 }
 
 void PrintGrid() {
@@ -111,7 +118,7 @@ bool AttackEnemy(int type) {
 		for (int y=0; y<GRID_HEIGHT; y++) {
 			for (int x=0; x<GRID_WIDTH; x++) {
 				if (grid[y][x] != type+1) continue;
-				grid[y][x] += 4;
+				grid[y][x] = 5;
 				return true;
 			}
 		}
@@ -147,7 +154,8 @@ int main() {
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
-	for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
+	int circleArrLength = sizeof(circles)/sizeof(Circle);
+	for (int i=0; i<circleArrLength; i++) {
 		circles[i] = NewCircle();
 	}
 
@@ -180,14 +188,14 @@ int main() {
 	Sprite SP_letter_S = {{7, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
+	Sprite SP_gameover = {{0, 67, 39, 17}, {10, 21}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
 	//SetWindowPosition(500, 300); //TEMP
 
 	// Init
-	ClearGrid();
-	PopulateGrid();
+	ResetLevel();
 
     while (!WindowShouldClose()) {
 
@@ -198,7 +206,7 @@ int main() {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 					gameMode = GAMEMODE_HELP;
 			}
-			for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
+			for (int i=0; i<circleArrLength; i++) {
 				circles[i].loc.y -= circles[i].speed;
 				if (circles[i].loc.y < -20) {
 					circles[i] = NewCircle();
@@ -217,25 +225,34 @@ int main() {
 			// Keyboard input
 			switch (GetKeyPressed()) {
 				case KEY_A:
-					AttackEnemy(0);
+					if (!AttackEnemy(0)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 				case KEY_S:
-					AttackEnemy(1);
+					if (!AttackEnemy(1)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 				case KEY_K:
-					AttackEnemy(2);
+					if (!AttackEnemy(2)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 				case KEY_L:
-					AttackEnemy(3);
+					if (!AttackEnemy(3)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 			}
 
 			timeLeft -= 0.06;
+			if (timeLeft <= 0) gameMode = GAMEMODE_GAMEOVER;
 
 		} else if (gameMode == GAMEMODE_HELP) {
 
 			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					gameMode = GAMEMODE_GAME;
+			}
+
+		} else if (gameMode == GAMEMODE_GAMEOVER) {
+
+			switch (GetKeyPressed()) {
+				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					ResetLevel();
 					gameMode = GAMEMODE_GAME;
 			}
 
@@ -250,7 +267,7 @@ int main() {
 
 			if (gameMode == GAMEMODE_TITLE) {
 
-				for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
+				for (int i=0; i<circleArrLength; i++) {
 					DrawCircle(circles[i].loc.x, circles[i].loc.y, circles[i].rad, COL_WHITE);
 				}
 				DrawTextureRec(TX_sprites, SP_logo.rec, SP_logo.loc, WHITE);
@@ -279,6 +296,10 @@ int main() {
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
 				DrawTextureRec(TX_sprites, SP_timeDot.rec, (Vector2){2+i, 57}, WHITE);
+
+			} else if (gameMode == GAMEMODE_GAMEOVER) {
+
+				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
 
 			}
 			
