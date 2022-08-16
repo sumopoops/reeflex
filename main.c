@@ -103,6 +103,15 @@ void InitSpriteArray(Sprite spriteArray[]) {
 	}
 }
 
+Circle NewCircle() {
+	Circle newCirc;
+	newCirc.loc.x = GetRandomValue(-10, 70);
+	newCirc.loc.y = 80;
+	newCirc.rad = GetRandomValue(3, 20);
+	newCirc.speed = GetRandomValue(1, 3);
+	return newCirc;
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -115,19 +124,17 @@ int main() {
 	float animTick = 0;
 	int animFrame = 0;
 	float timeLeft = 56;
-	Sprite sprites[100];
+	Sprite *sprites = malloc(sizeof(Sprite)*30);
 	InitSpriteArray(sprites); //TEMP
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
 	for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
-		circles[i].rad = GetRandomValue(3, 20);
-		circles[i].speed = GetRandomValue(1, 3);
-		circles[i].loc = (Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)};
+		circles[i] = NewCircle();
 	}
 
 	// Init Window Stuff
-	const char windowed = 15; // Make 0 for Fullscreen
+	const char windowed = 0; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -175,11 +182,8 @@ int main() {
 			}
 			for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
 				circles[i].loc.y -= circles[i].speed;
-				if (circles[i].loc.y < -60) {
-					circles[i].loc.y = 100;
-					circles[i].loc.x = GetRandomValue(0, 60);
-					circles[i].rad = GetRandomValue(3, 20);
-					circles[i].speed = GetRandomValue(1, 3);
+				if (circles[i].loc.y < -20) {
+					circles[i] = NewCircle();
 				}
 			}
 
