@@ -103,6 +103,24 @@ void InitSpriteArray(Sprite spriteArray[]) {
 	}
 }
 
+bool AttackEnemy(int type) {
+	if (types[type] > 0) {
+		types[type]--;
+		remainingTargets--;
+		// Find enemy of that type and change sprite
+		for (int y=0; y<GRID_HEIGHT; y++) {
+			for (int x=0; x<GRID_WIDTH; x++) {
+				if (grid[y][x] != type+1) continue;
+				grid[y][x] += 4;
+				return true;
+			}
+		}
+		return true;
+	} else {
+		return false;
+	}
+}
+
 Circle NewCircle() {
 	Circle newCirc;
 	newCirc.loc.x = GetRandomValue(-10, 70);
@@ -134,7 +152,7 @@ int main() {
 	}
 
 	// Init Window Stuff
-	const char windowed = 0; // Make 0 for Fullscreen
+	const char windowed = 14; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -165,7 +183,7 @@ int main() {
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
-	SetWindowPosition(500, 300);
+	//SetWindowPosition(500, 300); //TEMP
 
 	// Init
 	ClearGrid();
@@ -199,18 +217,16 @@ int main() {
 			// Keyboard input
 			switch (GetKeyPressed()) {
 				case KEY_A:
-					printf("A PRESSED\n");
-					ClearGrid();
-					PopulateGrid();
+					AttackEnemy(0);
 					break;
 				case KEY_S:
-					printf("S PRESSED\n");
+					AttackEnemy(1);
 					break;
 				case KEY_K:
-					printf("K PRESSED\n");
+					AttackEnemy(2);
 					break;
 				case KEY_L:
-					printf("L PRESSED\n");
+					AttackEnemy(3);
 					break;
 			}
 
@@ -272,7 +288,7 @@ int main() {
 		// DRAW
         BeginDrawing();
 		ClearBackground(BLACK);
-		DrawTexturePro(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight}, (Rectangle){playAreaX, 0, screenWidth*scale, screenHeight*scale}, (Vector2){0, 0}, 0, (Color){144, 223, 181, 255});
+		DrawTexturePro(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight}, (Rectangle){playAreaX, 0, screenWidth*scale, screenHeight*scale}, (Vector2){0, 0}, 0, WHITE);
         EndDrawing();
     }
 
