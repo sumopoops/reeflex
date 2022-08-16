@@ -1,0 +1,4 @@
+- [ ] Get animations system working
+- [ ] Move animations into Sprite pool
+- [x] Stop printing grid
+- [ ] Make function for creating a new circle, return circle

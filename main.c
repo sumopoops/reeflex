@@ -18,6 +18,12 @@ typedef struct Sprite {
 	bool exists;
 } Sprite;
 
+typedef struct Circle {
+	Vector2 loc;
+	int rad;
+	int speed;
+} Circle;
+
 
 
 //---------------------------------------------------------------------------------------- ENUMS
@@ -111,6 +117,14 @@ int main() {
 	float timeLeft = 56;
 	Sprite sprites[100];
 	InitSpriteArray(sprites); //TEMP
+	const Color COL_WHITE = {238, 238, 238, 255};
+	const Color COL_BLACK = {33, 33, 33, 255};
+	Circle circles[10] = {0};
+	for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
+		circles[i].rad = GetRandomValue(3, 20);
+		circles[i].speed = GetRandomValue(1, 3);
+		circles[i].loc = (Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)};
+	}
 
 	// Init Window Stuff
 	const char windowed = 15; // Make 0 for Fullscreen
@@ -133,7 +147,7 @@ int main() {
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
-	Sprite SP_logo = {{0, 40, 58, 16}, {1, 16}};
+	Sprite SP_logo = {{0, 40, 41, 27}, {9, 10}};
 	Sprite SP_hud = {{0, 20, 60, 10}, {0, 50}};
 	Sprite SP_targetRem = {{0, 30, 1, 2}, {0, 0}};
 	Sprite SP_timeDot = {{1, 30, 1, 1}, {0, 0}};
@@ -149,7 +163,6 @@ int main() {
 	// Init
 	ClearGrid();
 	PopulateGrid();
-	PrintGrid();
 
     while (!WindowShouldClose()) {
 
@@ -159,6 +172,15 @@ int main() {
 			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 					gameMode = GAMEMODE_HELP;
+			}
+			for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
+				circles[i].loc.y -= circles[i].speed;
+				if (circles[i].loc.y < -60) {
+					circles[i].loc.y = 100;
+					circles[i].loc.x = GetRandomValue(0, 60);
+					circles[i].rad = GetRandomValue(3, 20);
+					circles[i].speed = GetRandomValue(1, 3);
+				}
 			}
 
 		} else if (gameMode == GAMEMODE_GAME) {
@@ -208,7 +230,11 @@ int main() {
 
 			if (gameMode == GAMEMODE_TITLE) {
 
+				for (int i=0; i<sizeof(circles)/sizeof(Circle); i++) {
+					DrawCircle(circles[i].loc.x, circles[i].loc.y, circles[i].rad, COL_WHITE);
+				}
 				DrawTextureRec(TX_sprites, SP_logo.rec, SP_logo.loc, WHITE);
+				DrawRectangle(0, 46, 60, 7, COL_BLACK);
 
 			} else if (gameMode == GAMEMODE_HELP) {
 
@@ -242,7 +268,7 @@ int main() {
 		// DRAW
         BeginDrawing();
 		ClearBackground(BLACK);
-		DrawTexturePro(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight}, (Rectangle){playAreaX, 0, screenWidth*scale, screenHeight*scale}, (Vector2){0, 0}, 0, WHITE);
+		DrawTexturePro(target.texture, (Rectangle){0, 0, screenWidth, -screenHeight}, (Rectangle){playAreaX, 0, screenWidth*scale, screenHeight*scale}, (Vector2){0, 0}, 0, (Color){144, 223, 181, 255});
         EndDrawing();
     }
 
