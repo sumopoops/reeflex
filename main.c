@@ -145,7 +145,7 @@ int main() {
 
 	// Variables
 	const float animRate = 0.04;
-	unsigned char gameMode = GAMEMODE_TITLE;
+	unsigned char gameMode = GAMEMODE_GAME;
 	float animTick = 0;
 	int animFrame = 0;
 	float timeLeft = 56;
@@ -240,6 +240,12 @@ int main() {
 
 			timeLeft -= 0.06;
 			if (timeLeft <= 0) gameMode = GAMEMODE_GAMEOVER;
+
+			// Check for all enemies being dead
+			if (!types[0] && !types[1] && !types[2] && !types[3]) {
+				currentLevel++;
+				ResetLevel();
+			}
 
 		} else if (gameMode == GAMEMODE_HELP) {
 
