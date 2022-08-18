@@ -6,6 +6,6 @@
 - [ ] Change enemies to look like keys being pressed
 - [ ] Array length variables
 - [ ] Load spritesheet inline?
-- [ ] Fix level reset bug
+- [x] Fix level reset bug
 - [x] Change level when all eneimes dead
 - [ ] Make legend for what keys go to which enemies

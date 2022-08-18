@@ -261,6 +261,7 @@ int main() {
 
 			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					currentLevel = 1;
 					ResetLevel();
 					gameMode = GAMEMODE_GAME;
 			}
