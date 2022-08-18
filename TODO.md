@@ -9,3 +9,4 @@
 - [x] Fix level reset bug
 - [x] Change level when all eneimes dead
 - [ ] Make legend for what keys go to which enemies
+- [ ] Screen shake on miss

@@ -46,7 +46,7 @@ int grid[GRID_HEIGHT][GRID_WIDTH];
 Texture2D textures[10];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
-int currentLevel = 3;
+int currentLevel = 1;
 float timeLeft = 56;
 
 
@@ -148,8 +148,9 @@ Circle NewCircle() {
 int main() {
 
 	// Variables
+	const char windowed = 0; // Make 0 for Fullscreen
 	const float animRate = 0.04;
-	unsigned char gameMode = GAMEMODE_GAME;
+	unsigned char gameMode = GAMEMODE_TITLE;
 	float animTick = 0;
 	int animFrame = 0;
 	Sprite *sprites = malloc(sizeof(Sprite)*30);
@@ -163,7 +164,6 @@ int main() {
 	}
 
 	// Init Window Stuff
-	const char windowed = 14; // Make 0 for Fullscreen
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
@@ -192,6 +192,7 @@ int main() {
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
 	Sprite SP_gameover = {{0, 67, 39, 17}, {10, 21}};
+	Sprite SP_press_a = {{60, 20, 27, 5}, {16, 47}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -282,6 +283,7 @@ int main() {
 				}
 				DrawTextureRec(TX_sprites, SP_logo.rec, SP_logo.loc, WHITE);
 				DrawRectangle(0, 46, 60, 7, COL_BLACK);
+				DrawTextureRec(TX_sprites, SP_press_a.rec, SP_press_a.loc, WHITE);
 
 			} else if (gameMode == GAMEMODE_HELP) {
 
