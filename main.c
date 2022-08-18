@@ -47,6 +47,7 @@ Texture2D textures[10];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
 int currentLevel = 3;
+float timeLeft = 56;
 
 
 
@@ -72,6 +73,9 @@ void ResetLevel() {
 		types[type-1]++;
 		remainingTargets++;
 	}
+
+	// Reset timer
+	timeLeft = 56;
 }
 
 void AddSprite(Sprite newSprite, Sprite spriteArray[]) {
@@ -148,7 +152,6 @@ int main() {
 	unsigned char gameMode = GAMEMODE_TITLE;
 	float animTick = 0;
 	int animFrame = 0;
-	float timeLeft = 56;
 	Sprite *sprites = malloc(sizeof(Sprite)*30);
 	InitSpriteArray(sprites); //TEMP
 	const Color COL_WHITE = {238, 238, 238, 255};
