@@ -2,7 +2,7 @@
 - [ ] Move animations into Sprite pool
 - [x] Stop printing grid
 - [x] Make function for creating a new circle, return circle
-- [ ] Get something playable
+- [x] Get something playable
 - [ ] Change enemies to look like keys being pressed
 - [ ] Array length variables
 - [ ] Load spritesheet inline?
@@ -10,3 +10,4 @@
 - [x] Change level when all eneimes dead
 - [ ] Make legend for what keys go to which enemies
 - [ ] Screen shake on miss
+- [ ] State changing system to setup Sprite animations

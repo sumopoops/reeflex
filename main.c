@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
@@ -15,7 +14,6 @@ typedef struct Sprite {
 	int frames;
 	Vector2 frameAjustment;
 	bool repeatAnim;
-	int id;
 	bool exists;
 } Sprite;
 
@@ -47,6 +45,7 @@ Texture2D textures[10];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
 int currentLevel = 1;
+int mode = 1;
 float timeLeft = 56;
 
 
@@ -78,10 +77,6 @@ void ResetLevel() {
 	timeLeft = 56;
 }
 
-void AddSprite(Sprite newSprite, Sprite spriteArray[]) {
-	
-}
-
 void PrintGrid() {
 	for (int y=0; y<GRID_HEIGHT; y++) {
 		printf("\n");
@@ -106,6 +101,18 @@ void DrawIconGrid(Texture2D sheet, int frame) {
 Sprite BlankSprite() {
 	Sprite newBlankSprite = {0};
 	return newBlankSprite;
+}
+
+Sprite NewSprite(Rectangle rec, Vector2 loc, bool anim, int frames, Vector2 frameAjustment, bool repeatFrames) {
+	Sprite newSprite;
+	newSprite.exists = true;
+	newSprite.rec = rec;
+	newSprite.loc = loc;
+	newSprite.anim = anim;
+	newSprite.frames = frames;
+	newSprite.frameAjustment = frameAjustment;
+	newSprite.repeatAnim = repeatFrames;
+	return newSprite;
 }
 
 void InitSpriteArray(Sprite spriteArray[]) {
@@ -154,7 +161,8 @@ int main() {
 	float animTick = 0;
 	int animFrame = 0;
 	Sprite *sprites = malloc(sizeof(Sprite)*30);
-	InitSpriteArray(sprites); //TEMP
+	InitSpriteArray(sprites);
+	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -192,7 +200,6 @@ int main() {
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
 	Sprite SP_gameover = {{0, 67, 39, 17}, {10, 21}};
-	Sprite SP_press_a = {{60, 20, 27, 5}, {16, 47}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -283,7 +290,7 @@ int main() {
 				}
 				DrawTextureRec(TX_sprites, SP_logo.rec, SP_logo.loc, WHITE);
 				DrawRectangle(0, 46, 60, 7, COL_BLACK);
-				DrawTextureRec(TX_sprites, SP_press_a.rec, SP_press_a.loc, WHITE);
+				//DrawTextureRec(TX_sprites, SP_press_a.rec, SP_press_a.loc, WHITE);
 
 			} else if (gameMode == GAMEMODE_HELP) {
 
@@ -315,6 +322,12 @@ int main() {
 
 			}
 			
+			// Always draw
+			for (int i=0; i<sizeof(*sprites)/sizeof(Sprite); i++) {
+				if (sprites[i].exists) {
+					DrawTextureRec(TX_sprites, sprites[i].rec, sprites[i].loc, WHITE);
+				}
+			}
 		
 		EndTextureMode();
 
