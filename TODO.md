@@ -10,4 +10,4 @@
 - [x] Change level when all eneimes dead
 - [ ] Make legend for what keys go to which enemies
 - [ ] Screen shake on miss
-- [ ] State changing system to setup Sprite animations
+- [x] State changing system to setup Sprite animations

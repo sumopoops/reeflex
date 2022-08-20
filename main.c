@@ -148,6 +148,10 @@ Circle NewCircle() {
 	return newCirc;
 }
 
+void UpdateSprites() {
+	
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -215,6 +219,7 @@ int main() {
 
 			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					InitSpriteArray(sprites);
 					gameMode = GAMEMODE_HELP;
 			}
 			for (int i=0; i<circleArrLength; i++) {
@@ -275,6 +280,9 @@ int main() {
 			}
 
 		}
+
+		// Always run
+		UpdateSprites(sprites);
 		
 
 		// TEXTURE DRAW
