@@ -11,3 +11,7 @@
 - [ ] Make legend for what keys go to which enemies
 - [ ] Screen shake on miss
 - [x] State changing system to setup Sprite animations
+- [x] Get sounds working
+- [ ] Better sounds
+- [ ] Refactor code, less asset creations
+- [ ] Pass references instead of values?

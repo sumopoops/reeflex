@@ -121,7 +121,7 @@ void InitSpriteArray(Sprite spriteArray[]) {
 	}
 }
 
-bool AttackEnemy(int type) {
+bool AttackEnemy(int type, Sound attackSound) {
 	if (types[type] > 0) {
 		types[type]--;
 		remainingTargets--;
@@ -130,6 +130,7 @@ bool AttackEnemy(int type) {
 			for (int x=0; x<GRID_WIDTH; x++) {
 				if (grid[y][x] != type+1) continue;
 				grid[y][x] = 5;
+				PlaySound(attackSound);
 				return true;
 			}
 		}
@@ -183,15 +184,19 @@ int main() {
 		scale = (float)windowed;
 		playAreaX = 0;
 	} else {
-		InitWindow(GetScreenWidth(), GetScreenHeight(), "REEFLEX");
+		InitWindow(GetScreenWidth(), GetScreenHeight(), "REEFLX");
 		scale = (float)GetScreenHeight()/screenHeight;
 		playAreaX = (float)(GetScreenWidth()-(screenWidth*scale))*0.5;
 		ToggleFullscreen();
 		HideCursor();
 	}
 
+	// Audio
+	InitAudioDevice();
+
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
+	Sound SND_bleep = LoadSound("snd/bleep.ogg");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -241,16 +246,17 @@ int main() {
 			// Keyboard input
 			switch (GetKeyPressed()) {
 				case KEY_A:
-					if (!AttackEnemy(0)) gameMode = GAMEMODE_GAMEOVER;
+					if (!AttackEnemy(0, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
+					PlaySound(SND_bleep);
 					break;
 				case KEY_S:
-					if (!AttackEnemy(1)) gameMode = GAMEMODE_GAMEOVER;
+					if (!AttackEnemy(1, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 				case KEY_K:
-					if (!AttackEnemy(2)) gameMode = GAMEMODE_GAMEOVER;
+					if (!AttackEnemy(2, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 				case KEY_L:
-					if (!AttackEnemy(3)) gameMode = GAMEMODE_GAMEOVER;
+					if (!AttackEnemy(3, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
 					break;
 			}
 
@@ -267,6 +273,7 @@ int main() {
 
 			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+					ResetLevel();
 					gameMode = GAMEMODE_GAME;
 			}
 
@@ -275,8 +282,7 @@ int main() {
 			switch (GetKeyPressed()) {
 				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 					currentLevel = 1;
-					ResetLevel();
-					gameMode = GAMEMODE_GAME;
+					gameMode = GAMEMODE_HELP;
 			}
 
 		}
