@@ -149,8 +149,10 @@ Circle NewCircle() {
 	return newCirc;
 }
 
-void UpdateSprites() {
-	
+void UpdateSprites(Sprite spritesArray[]) {
+	for (int i=0; i<sizeof(*spritesArray)/sizeof(Sprite); i++) {
+		// Move sprite frame position based on frames
+	}
 }
 
 
@@ -161,9 +163,9 @@ int main() {
 
 	// Variables
 	const char windowed = 0; // Make 0 for Fullscreen
-	const float animRate = 0.04;
+	const float enemyAnimRate = 0.04;
 	unsigned char gameMode = GAMEMODE_TITLE;
-	float animTick = 0;
+	float enemyAnimTick = 0;
 	int animFrame = 0;
 	Sprite *sprites = malloc(sizeof(Sprite)*30);
 	InitSpriteArray(sprites);
@@ -180,7 +182,7 @@ int main() {
 	float scale, playAreaX;
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
-		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLEX");
+		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLX");
 		scale = (float)windowed;
 		playAreaX = 0;
 	} else {
@@ -237,9 +239,9 @@ int main() {
 		} else if (gameMode == GAMEMODE_GAME) {
 
 			// Animation tick
-			animTick += animRate;
-			if (animTick > 1) {
-				animTick = 0;
+			enemyAnimTick += enemyAnimRate;
+			if (enemyAnimTick > 1) {
+				enemyAnimTick = 0;
 				animFrame = !animFrame;
 			}
 

@@ -15,3 +15,4 @@
 - [ ] Better sounds
 - [ ] Refactor code, less asset creations
 - [ ] Pass references instead of values?
+- [ ] Get UpdateSprite animations automated
