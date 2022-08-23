@@ -1,4 +1,4 @@
-- [ ] Get animations system working
+- [x] Get animations system working
 - [ ] Move animations into Sprite pool
 - [x] Stop printing grid
 - [x] Make function for creating a new circle, return circle
@@ -8,11 +8,11 @@
 - [ ] Load spritesheet inline?
 - [x] Fix level reset bug
 - [x] Change level when all eneimes dead
-- [ ] Make legend for what keys go to which enemies
+- [x] Make legend for what keys go to which enemies
 - [ ] Screen shake on miss
 - [x] State changing system to setup Sprite animations
 - [x] Get sounds working
 - [ ] Better sounds
 - [ ] Refactor code, less asset creations
 - [ ] Pass references instead of values?
-- [ ] Get UpdateSprite animations automated
+- [x] Get UpdateSprite animations automated

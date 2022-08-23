@@ -12,9 +12,12 @@ typedef struct Sprite {
 	Vector2 loc;
 	bool anim;
 	int frames;
+	int currentFrame;
 	Vector2 frameAjustment;
 	bool repeatAnim;
 	bool exists;
+	float animTick;
+	float animSpeed;
 } Sprite;
 
 typedef struct Circle {
@@ -103,7 +106,7 @@ Sprite BlankSprite() {
 	return newBlankSprite;
 }
 
-Sprite NewSprite(Rectangle rec, Vector2 loc, bool anim, int frames, Vector2 frameAjustment, bool repeatFrames) {
+Sprite NewSprite(Rectangle rec, Vector2 loc, bool anim, int frames, Vector2 frameAjustment, bool repeatFrames, float animSpeed) {
 	Sprite newSprite;
 	newSprite.exists = true;
 	newSprite.rec = rec;
@@ -112,6 +115,9 @@ Sprite NewSprite(Rectangle rec, Vector2 loc, bool anim, int frames, Vector2 fram
 	newSprite.frames = frames;
 	newSprite.frameAjustment = frameAjustment;
 	newSprite.repeatAnim = repeatFrames;
+	newSprite.animTick = 0;
+	newSprite.animSpeed = animSpeed;
+	newSprite.currentFrame = 0;
 	return newSprite;
 }
 
@@ -149,9 +155,16 @@ Circle NewCircle() {
 	return newCirc;
 }
 
-void UpdateSprites(Sprite spritesArray[]) {
-	for (int i=0; i<sizeof(*spritesArray)/sizeof(Sprite); i++) {
-		// Move sprite frame position based on frames
+void UpdateSprites(Sprite *spritesArray) {
+	Sprite *s = spritesArray;
+	for (int i=0; i<sizeof(*s)/sizeof(Sprite); i++) {
+		if (!s[i].exists) continue;
+		s[i].animTick += s[i].animSpeed;
+		if (s[i].animTick > 1) {
+			s[i].animTick = 0;
+			s[i].currentFrame++;
+			if (s[i].currentFrame > s[i].frames-1) s[i].currentFrame = 0;
+		}
 	}
 }
 
@@ -169,7 +182,7 @@ int main() {
 	int animFrame = 0;
 	Sprite *sprites = malloc(sizeof(Sprite)*30);
 	InitSpriteArray(sprites);
-	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true);
+	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true, 0.1);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -341,7 +354,12 @@ int main() {
 			// Always draw
 			for (int i=0; i<sizeof(*sprites)/sizeof(Sprite); i++) {
 				if (sprites[i].exists) {
-					DrawTextureRec(TX_sprites, sprites[i].rec, sprites[i].loc, WHITE);
+					Rectangle frameRec;
+					frameRec.x = sprites[i].rec.x + sprites[i].frameAjustment.x* sprites[i].currentFrame;
+					frameRec.y = sprites[i].rec.y + sprites[i].frameAjustment.y * sprites[i].currentFrame;
+					frameRec.width = sprites[i].rec.width;
+					frameRec.height = sprites[i].rec.height;
+					DrawTextureRec(TX_sprites, frameRec, sprites[i].loc, WHITE);
 				}
 			}
 		
