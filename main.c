@@ -92,11 +92,11 @@ void PrintGrid() {
 	printf("\33[0m\n");
 }
 
-void DrawIconGrid(Texture2D sheet, int frame) {
+void DrawIconGrid(Texture2D sheet, int frame, Vector2 shakeVector) {
 	for (int y=0; y<GRID_HEIGHT; y++) {
 		for (int x=0; x<GRID_WIDTH; x++) {
 			if (grid[y][x])
-			DrawTextureRec(sheet, (Rectangle){(grid[y][x]-1)*10, frame*10, 10, 10}, (Vector2){x*10, y*10}, WHITE);
+			DrawTextureRec(sheet, (Rectangle){(grid[y][x]-1)*10, frame*10, 10, 10}, (Vector2){(x*10)+shakeVector.x, (y*10)+shakeVector.y}, WHITE);
 		}
 	}
 }
@@ -127,7 +127,7 @@ void InitSpriteArray(Sprite spriteArray[]) {
 	}
 }
 
-bool AttackEnemy(int type, Sound attackSound) {
+bool AttackEnemy(int type) {
 	if (types[type] > 0) {
 		types[type]--;
 		remainingTargets--;
@@ -136,7 +136,6 @@ bool AttackEnemy(int type, Sound attackSound) {
 			for (int x=0; x<GRID_WIDTH; x++) {
 				if (grid[y][x] != type+1) continue;
 				grid[y][x] = 5;
-				PlaySound(attackSound);
 				return true;
 			}
 		}
@@ -203,6 +202,12 @@ int main() {
 	for (int i=0; i<circleArrLength; i++) {
 		circles[i] = NewCircle();
 	}
+
+	// Shake shake
+	Vector2 shakeVector = {0, 0};
+	int shakeCount = 0;
+	float shakeTick = 0;
+	float shakeRate = 0.5;
 
 	// Init Window Stuff
 	float scale, playAreaX;
@@ -271,20 +276,53 @@ int main() {
 				animFrame = !animFrame;
 			}
 
+			// Shake tick
+			shakeTick += shakeRate;
+			if (shakeTick > 1) {
+				if (shakeCount > 0) {
+					shakeVector.x = GetRandomValue(-2, 2);
+					shakeVector.y = GetRandomValue(-2, 2);
+					shakeTick = 0;
+					shakeCount--;
+				} else {
+					shakeVector = (Vector2){0, 0};
+				}
+				
+			}
+
 			// Keyboard input
 			switch (GetKeyPressed()) {
 				case KEY_A:
-					if (!AttackEnemy(0, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
-					PlaySound(SND_bleep);
+					if (AttackEnemy(0)) {
+						PlaySound(SND_bleep);
+						shakeCount = 3;
+					} else {
+						gameMode = GAMEMODE_GAMEOVER;
+					}
 					break;
 				case KEY_S:
-					if (!AttackEnemy(1, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
+					if (AttackEnemy(1)) {
+						PlaySound(SND_bleep);
+						shakeCount = 3;
+					} else {
+						gameMode = GAMEMODE_GAMEOVER;
+					}
 					break;
 				case KEY_K:
-					if (!AttackEnemy(2, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
+					if (AttackEnemy(2)) {
+						PlaySound(SND_bleep);
+						shakeCount = 3;
+					} else {
+						gameMode = GAMEMODE_GAMEOVER;
+					}
 					break;
 				case KEY_L:
-					if (!AttackEnemy(3, SND_bleep)) gameMode = GAMEMODE_GAMEOVER;
+					if (AttackEnemy(3)) {
+						PlaySound(SND_bleep);
+						shakeCount = 3;
+					} else {
+						gameMode = GAMEMODE_GAMEOVER;
+					}
 					break;
 			}
 
@@ -347,7 +385,7 @@ int main() {
 
 			} else if (gameMode == GAMEMODE_GAME) {
 
-				DrawIconGrid(TX_sprites, animFrame);
+				DrawIconGrid(TX_sprites, animFrame, shakeVector);
 				DrawTextureRec(TX_sprites, SP_hud.rec, SP_hud.loc, WHITE);
 
 				// Draw target tracker

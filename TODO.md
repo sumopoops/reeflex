@@ -9,7 +9,7 @@
 - [x] Fix level reset bug
 - [x] Change level when all eneimes dead
 - [x] Make legend for what keys go to which enemies
-- [ ] Screen shake on miss
+- [x] Screen shake on hit
 - [x] State changing system to setup Sprite animations
 - [x] Get sounds working
 - [ ] Better sounds
@@ -17,3 +17,8 @@
 - [ ] Pass references instead of values?
 - [x] Get UpdateSprite animations automated
 - [x] Move animation/sprites drawing to it's own function
+- [x] Fix the mess that you made with the shake functions
+- [ ] Show level reached on gameover screen
+- [ ] Gameover death animation
+- [ ] Game mode change transition effects
+
