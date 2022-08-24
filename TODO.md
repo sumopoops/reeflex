@@ -16,4 +16,4 @@
 - [ ] Refactor code, less asset creations
 - [ ] Pass references instead of values?
 - [x] Get UpdateSprite animations automated
-- [ ] Move animation/sprites drawing to it's own function
+- [x] Move animation/sprites drawing to it's own function

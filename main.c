@@ -168,6 +168,19 @@ void UpdateSprites(Sprite *spritesArray) {
 	}
 }
 
+void DrawSprites(Sprite *spriteArray, Texture2D spriteSheet) {
+	for (int i=0; i<sizeof(*spriteArray)/sizeof(Sprite); i++) {
+		if (spriteArray[i].exists) {
+			Rectangle frameRec;
+			frameRec.x = spriteArray[i].rec.x + spriteArray[i].frameAjustment.x* spriteArray[i].currentFrame;
+			frameRec.y = spriteArray[i].rec.y + spriteArray[i].frameAjustment.y * spriteArray[i].currentFrame;
+			frameRec.width = spriteArray[i].rec.width;
+			frameRec.height = spriteArray[i].rec.height;
+			DrawTextureRec(spriteSheet, frameRec, spriteArray[i].loc, WHITE);
+		}
+	}
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -175,7 +188,7 @@ void UpdateSprites(Sprite *spritesArray) {
 int main() {
 
 	// Variables
-	const char windowed = 0; // Make 0 for Fullscreen
+	const char windowed = 13; // Make 0 for Fullscreen
 	const float enemyAnimRate = 0.04;
 	unsigned char gameMode = GAMEMODE_TITLE;
 	float enemyAnimTick = 0;
@@ -352,16 +365,7 @@ int main() {
 			}
 			
 			// Always draw
-			for (int i=0; i<sizeof(*sprites)/sizeof(Sprite); i++) {
-				if (sprites[i].exists) {
-					Rectangle frameRec;
-					frameRec.x = sprites[i].rec.x + sprites[i].frameAjustment.x* sprites[i].currentFrame;
-					frameRec.y = sprites[i].rec.y + sprites[i].frameAjustment.y * sprites[i].currentFrame;
-					frameRec.width = sprites[i].rec.width;
-					frameRec.height = sprites[i].rec.height;
-					DrawTextureRec(TX_sprites, frameRec, sprites[i].loc, WHITE);
-				}
-			}
+			DrawSprites(sprites, TX_sprites);
 		
 		EndTextureMode();
 
