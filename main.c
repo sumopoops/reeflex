@@ -187,7 +187,7 @@ void DrawSprites(Sprite *spriteArray, Texture2D spriteSheet) {
 int main() {
 
 	// Variables
-	const char windowed = 13; // Make 0 for Fullscreen
+	const char windowed = 0; // Make 0 for Fullscreen
 	const float enemyAnimRate = 0.04;
 	unsigned char gameMode = GAMEMODE_TITLE;
 	float enemyAnimTick = 0;
@@ -199,9 +199,7 @@ int main() {
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
 	int circleArrLength = sizeof(circles)/sizeof(Circle);
-	for (int i=0; i<circleArrLength; i++) {
-		circles[i] = NewCircle();
-	}
+	for (int i=0; i<circleArrLength; i++) circles[i] = NewCircle();
 
 	// Shake shake
 	Vector2 shakeVector = {0, 0};
@@ -230,6 +228,7 @@ int main() {
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
+	Sound SND_gameover = LoadSound("snd/bleep.ogg");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -292,38 +291,47 @@ int main() {
 
 			// Keyboard input
 			switch (GetKeyPressed()) {
+
 				case KEY_A:
 					if (AttackEnemy(0)) {
 						PlaySound(SND_bleep);
 						shakeCount = 3;
 					} else {
+						PlaySound(SND_gameover);
 						gameMode = GAMEMODE_GAMEOVER;
 					}
 					break;
+
 				case KEY_S:
 					if (AttackEnemy(1)) {
 						PlaySound(SND_bleep);
 						shakeCount = 3;
 					} else {
+						PlaySound(SND_gameover);
 						gameMode = GAMEMODE_GAMEOVER;
 					}
 					break;
+
 				case KEY_K:
 					if (AttackEnemy(2)) {
 						PlaySound(SND_bleep);
 						shakeCount = 3;
 					} else {
+						PlaySound(SND_gameover);
 						gameMode = GAMEMODE_GAMEOVER;
 					}
 					break;
+
 				case KEY_L:
 					if (AttackEnemy(3)) {
 						PlaySound(SND_bleep);
 						shakeCount = 3;
 					} else {
+						PlaySound(SND_gameover);
 						gameMode = GAMEMODE_GAMEOVER;
 					}
 					break;
+
 			}
 
 			timeLeft -= 0.06;
