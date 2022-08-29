@@ -187,19 +187,20 @@ void DrawSprites(Sprite *spriteArray, Texture2D spriteSheet) {
 int main() {
 
 	// Variables
-	const char windowed = 0; // Make 0 for Fullscreen
+	const char windowed = 15; // Make 0 for Fullscreen
 	const float enemyAnimRate = 0.04;
 	unsigned char gameMode = GAMEMODE_TITLE;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
 	Sprite *sprites = malloc(sizeof(Sprite)*30);
 	InitSpriteArray(sprites);
-	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true, 0.1);
+	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true, 0.18);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
 	int circleArrLength = sizeof(circles)/sizeof(Circle);
 	for (int i=0; i<circleArrLength; i++) circles[i] = NewCircle();
+	bool controlsEnabled = true;
 
 	// Shake shake
 	Vector2 shakeVector = {0, 0};
@@ -228,7 +229,7 @@ int main() {
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
-	Sound SND_gameover = LoadSound("snd/bleep.ogg");
+	Sound SND_gameover = LoadSound("snd/gameover.ogg");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -252,12 +253,15 @@ int main() {
     while (!WindowShouldClose()) {
 
         // UPDATE
+		printf("TEST\n");
 		if (gameMode == GAMEMODE_TITLE) {
 
-			switch (GetKeyPressed()) {
-				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
-					InitSpriteArray(sprites);
-					gameMode = GAMEMODE_HELP;
+			if (controlsEnabled) {
+				switch (GetKeyPressed()) {
+					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+						InitSpriteArray(sprites);
+						gameMode = GAMEMODE_HELP;
+				}
 			}
 			for (int i=0; i<circleArrLength; i++) {
 				circles[i].loc.y -= circles[i].speed;
@@ -290,48 +294,50 @@ int main() {
 			}
 
 			// Keyboard input
-			switch (GetKeyPressed()) {
+			if (controlsEnabled) {
+				switch (GetKeyPressed()) {
 
-				case KEY_A:
-					if (AttackEnemy(0)) {
-						PlaySound(SND_bleep);
-						shakeCount = 3;
-					} else {
-						PlaySound(SND_gameover);
-						gameMode = GAMEMODE_GAMEOVER;
-					}
-					break;
+					case KEY_A:
+						if (AttackEnemy(0)) {
+							PlaySound(SND_bleep);
+							shakeCount = 3;
+						} else {
+							PlaySound(SND_gameover);
+							gameMode = GAMEMODE_GAMEOVER;
+						}
+						break;
 
-				case KEY_S:
-					if (AttackEnemy(1)) {
-						PlaySound(SND_bleep);
-						shakeCount = 3;
-					} else {
-						PlaySound(SND_gameover);
-						gameMode = GAMEMODE_GAMEOVER;
-					}
-					break;
+					case KEY_S:
+						if (AttackEnemy(1)) {
+							PlaySound(SND_bleep);
+							shakeCount = 3;
+						} else {
+							PlaySound(SND_gameover);
+							gameMode = GAMEMODE_GAMEOVER;
+						}
+						break;
 
-				case KEY_K:
-					if (AttackEnemy(2)) {
-						PlaySound(SND_bleep);
-						shakeCount = 3;
-					} else {
-						PlaySound(SND_gameover);
-						gameMode = GAMEMODE_GAMEOVER;
-					}
-					break;
+					case KEY_K:
+						if (AttackEnemy(2)) {
+							PlaySound(SND_bleep);
+							shakeCount = 3;
+						} else {
+							PlaySound(SND_gameover);
+							gameMode = GAMEMODE_GAMEOVER;
+						}
+						break;
 
-				case KEY_L:
-					if (AttackEnemy(3)) {
-						PlaySound(SND_bleep);
-						shakeCount = 3;
-					} else {
-						PlaySound(SND_gameover);
-						gameMode = GAMEMODE_GAMEOVER;
-					}
-					break;
+					case KEY_L:
+						if (AttackEnemy(3)) {
+							PlaySound(SND_bleep);
+							shakeCount = 3;
+						} else {
+							PlaySound(SND_gameover);
+							gameMode = GAMEMODE_GAMEOVER;
+						}
+						break;
 
+				}
 			}
 
 			timeLeft -= 0.06;
@@ -345,18 +351,22 @@ int main() {
 
 		} else if (gameMode == GAMEMODE_HELP) {
 
-			switch (GetKeyPressed()) {
-				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
-					ResetLevel();
-					gameMode = GAMEMODE_GAME;
+			if (controlsEnabled) {
+				switch (GetKeyPressed()) {
+					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+						ResetLevel();
+						gameMode = GAMEMODE_GAME;
+				}
 			}
 
 		} else if (gameMode == GAMEMODE_GAMEOVER) {
 
-			switch (GetKeyPressed()) {
-				case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
-					currentLevel = 1;
-					gameMode = GAMEMODE_HELP;
+			if (controlsEnabled) {
+				switch (GetKeyPressed()) {
+					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+						currentLevel = 1;
+						gameMode = GAMEMODE_HELP;
+				}
 			}
 
 		}
