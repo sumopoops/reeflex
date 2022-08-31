@@ -2,3 +2,5 @@ main.exe
 lib
 include
 .vscode
+main.out
+main_linux
