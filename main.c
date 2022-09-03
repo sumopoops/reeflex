@@ -50,6 +50,8 @@ int remainingTargets = 0;
 int currentLevel = 1;
 int mode = 1;
 float timeLeft = 56;
+int lives = 3;
+int shakeCount = 0;
 
 
 
@@ -139,6 +141,7 @@ bool AttackEnemy(int type) {
 				return true;
 			}
 		}
+		shakeCount = 3;
 		return true;
 	} else {
 		return false;
@@ -204,7 +207,6 @@ int main() {
 
 	// Shake shake
 	Vector2 shakeVector = {0, 0};
-	int shakeCount = 0;
 	float shakeTick = 0;
 	float shakeRate = 0.5;
 
@@ -229,6 +231,7 @@ int main() {
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
+	Sound SND_looseLife = LoadSound("snd/bleep.ogg");
 	Sound SND_gameover = LoadSound("snd/gameover.ogg");
 
 	// Sprites
@@ -295,48 +298,24 @@ int main() {
 
 			// Keyboard input
 			if (controlsEnabled) {
+				int enemyTypeKey = 4;
 				switch (GetKeyPressed()) {
-
-					case KEY_A:
-						if (AttackEnemy(0)) {
-							PlaySound(SND_bleep);
-							shakeCount = 3;
-						} else {
+					case KEY_A: enemyTypeKey = 0; break;
+					case KEY_S: enemyTypeKey = 1; break;
+					case KEY_K: enemyTypeKey = 2; break;
+					case KEY_L: enemyTypeKey = 3; break;
+				}
+				if (enemyTypeKey != 4) {
+					if (AttackEnemy(enemyTypeKey)) {
+						PlaySound(SND_bleep);
+					} else {
+						lives--;
+						PlaySound(SND_looseLife);
+						if (!lives) {
 							PlaySound(SND_gameover);
 							gameMode = GAMEMODE_GAMEOVER;
 						}
-						break;
-
-					case KEY_S:
-						if (AttackEnemy(1)) {
-							PlaySound(SND_bleep);
-							shakeCount = 3;
-						} else {
-							PlaySound(SND_gameover);
-							gameMode = GAMEMODE_GAMEOVER;
-						}
-						break;
-
-					case KEY_K:
-						if (AttackEnemy(2)) {
-							PlaySound(SND_bleep);
-							shakeCount = 3;
-						} else {
-							PlaySound(SND_gameover);
-							gameMode = GAMEMODE_GAMEOVER;
-						}
-						break;
-
-					case KEY_L:
-						if (AttackEnemy(3)) {
-							PlaySound(SND_bleep);
-							shakeCount = 3;
-						} else {
-							PlaySound(SND_gameover);
-							gameMode = GAMEMODE_GAMEOVER;
-						}
-						break;
-
+					}
 				}
 			}
 
@@ -366,6 +345,7 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						currentLevel = 1;
 						gameMode = GAMEMODE_HELP;
+						lives = 3;
 				}
 			}
 
