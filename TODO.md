@@ -1,25 +1,29 @@
 - [x] Get animations system working
-- [ ] Move animations into Sprite pool
 - [x] Stop printing grid
 - [x] Make function for creating a new circle, return circle
 - [x] Get something playable
-- [ ] Change enemies to look like keys being pressed
-- [ ] Array length variables
-- [ ] Load spritesheet inline?
 - [x] Fix level reset bug
 - [x] Change level when all eneimes dead
 - [x] Make legend for what keys go to which enemies
 - [x] Screen shake on hit
 - [x] State changing system to setup Sprite animations
 - [x] Get sounds working
-- [ ] Better sounds
-- [ ] Refactor code, less asset creations
-- [ ] Pass references instead of values?
 - [x] Get UpdateSprite animations automated
 - [x] Move animation/sprites drawing to it's own function
 - [x] Fix the mess that you made with the shake functions
+- [x] Replace gameover sound
+- [x] Don't play life loss sound on gameover
+- [x] Fixed printf debugging by removing "-mwindows" from make.bat
+- [ ] Move animations into Sprite pool
+- [ ] Array length variables
+- [ ] Load spritesheet inline?
+- [ ] Better sounds
+- [ ] Refactor code, less asset creations
+- [ ] Pass references instead of values?
 - [ ] Show level reached on gameover screen
 - [ ] Gameover death animation
 - [ ] Game mode change transition effects
-- [ ] Replace gameover sound
-
+- [ ] Add heart animation for lives
+- [ ] Fix sprite system not updating or drawing anything but the first entry in array
+- [ ] Create struct to handle basic timers?
+- [ ] Create level system and move to next level after screen cleared

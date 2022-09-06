@@ -26,6 +26,13 @@ typedef struct Circle {
 	int speed;
 } Circle;
 
+typedef struct Timer {
+	float tick;
+	float speed;
+	int frame;
+	int maxFrames;
+} Timer;
+
 
 
 //---------------------------------------------------------------------------------------- ENUMS
@@ -141,7 +148,6 @@ bool AttackEnemy(int type) {
 				return true;
 			}
 		}
-		shakeCount = 3;
 		return true;
 	} else {
 		return false;
@@ -160,12 +166,14 @@ Circle NewCircle() {
 void UpdateSprites(Sprite *spritesArray) {
 	Sprite *s = spritesArray;
 	for (int i=0; i<sizeof(*s)/sizeof(Sprite); i++) {
-		if (!s[i].exists) continue;
-		s[i].animTick += s[i].animSpeed;
-		if (s[i].animTick > 1) {
-			s[i].animTick = 0;
-			s[i].currentFrame++;
-			if (s[i].currentFrame > s[i].frames-1) s[i].currentFrame = 0;
+		printf("Updating Sprite: %d, Exists: %d\n", i, s[i].exists);
+		if (s[i].exists) {
+			s[i].animTick += s[i].animSpeed;
+			if (s[i].animTick > 1) {
+				s[i].animTick = 0;
+				s[i].currentFrame++;
+				if (s[i].currentFrame > s[i].frames-1) s[i].currentFrame = 0;
+			}
 		}
 	}
 }
@@ -231,7 +239,7 @@ int main() {
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
-	Sound SND_looseLife = LoadSound("snd/bleep.ogg");
+	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
 	Sound SND_gameover = LoadSound("snd/gameover.ogg");
 
 	// Sprites
@@ -256,7 +264,6 @@ int main() {
     while (!WindowShouldClose()) {
 
         // UPDATE
-		printf("TEST\n");
 		if (gameMode == GAMEMODE_TITLE) {
 
 			if (controlsEnabled) {
@@ -308,12 +315,14 @@ int main() {
 				if (enemyTypeKey != 4) {
 					if (AttackEnemy(enemyTypeKey)) {
 						PlaySound(SND_bleep);
+						shakeCount = 3;
 					} else {
 						lives--;
-						PlaySound(SND_looseLife);
 						if (!lives) {
 							PlaySound(SND_gameover);
 							gameMode = GAMEMODE_GAMEOVER;
+						} else {
+							PlaySound(SND_looseLife);
 						}
 					}
 				}
@@ -324,7 +333,7 @@ int main() {
 
 			// Check for all enemies being dead
 			if (!types[0] && !types[1] && !types[2] && !types[3]) {
-				currentLevel++;
+				currentLevel += 2;
 				ResetLevel();
 			}
 
@@ -335,6 +344,7 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
+						sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){20, 20}, true, 7, (Vector2){13, 0}, true, 0.2);
 				}
 			}
 
