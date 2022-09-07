@@ -59,6 +59,7 @@ int mode = 1;
 float timeLeft = 56;
 int lives = 3;
 int shakeCount = 0;
+Sprite sprites[30];
 
 
 
@@ -163,30 +164,28 @@ Circle NewCircle() {
 	return newCirc;
 }
 
-void UpdateSprites(Sprite *spritesArray) {
-	Sprite *s = spritesArray;
-	for (int i=0; i<sizeof(*s)/sizeof(Sprite); i++) {
-		printf("Updating Sprite: %d, Exists: %d\n", i, s[i].exists);
-		if (s[i].exists) {
-			s[i].animTick += s[i].animSpeed;
-			if (s[i].animTick > 1) {
-				s[i].animTick = 0;
-				s[i].currentFrame++;
-				if (s[i].currentFrame > s[i].frames-1) s[i].currentFrame = 0;
+void UpdateSprites() {
+	for (int i=0; i<30; i++) {
+		if (sprites[i].exists) {
+			sprites[i].animTick += sprites[i].animSpeed;
+			if (sprites[i].animTick > 1) {
+				sprites[i].animTick = 0;
+				sprites[i].currentFrame++;
+				if (sprites[i].currentFrame > sprites[i].frames-1) sprites[i].currentFrame = 0;
 			}
 		}
 	}
 }
 
-void DrawSprites(Sprite *spriteArray, Texture2D spriteSheet) {
-	for (int i=0; i<sizeof(*spriteArray)/sizeof(Sprite); i++) {
-		if (spriteArray[i].exists) {
+void DrawSprites(Texture2D spriteSheet) {
+	for (int i=0; i<30; i++) {
+		if (sprites[i].exists) {
 			Rectangle frameRec;
-			frameRec.x = spriteArray[i].rec.x + spriteArray[i].frameAjustment.x* spriteArray[i].currentFrame;
-			frameRec.y = spriteArray[i].rec.y + spriteArray[i].frameAjustment.y * spriteArray[i].currentFrame;
-			frameRec.width = spriteArray[i].rec.width;
-			frameRec.height = spriteArray[i].rec.height;
-			DrawTextureRec(spriteSheet, frameRec, spriteArray[i].loc, WHITE);
+			frameRec.x = sprites[i].rec.x + sprites[i].frameAjustment.x* sprites[i].currentFrame;
+			frameRec.y = sprites[i].rec.y + sprites[i].frameAjustment.y * sprites[i].currentFrame;
+			frameRec.width = sprites[i].rec.width;
+			frameRec.height = sprites[i].rec.height;
+			DrawTextureRec(spriteSheet, frameRec, sprites[i].loc, WHITE);
 		}
 	}
 }
@@ -203,7 +202,6 @@ int main() {
 	unsigned char gameMode = GAMEMODE_TITLE;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
-	Sprite *sprites = malloc(sizeof(Sprite)*30);
 	InitSpriteArray(sprites);
 	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true, 0.18);
 	const Color COL_WHITE = {238, 238, 238, 255};
@@ -411,7 +409,7 @@ int main() {
 			}
 			
 			// Always draw
-			DrawSprites(sprites, TX_sprites);
+			DrawSprites(TX_sprites);
 		
 		EndTextureMode();
 
