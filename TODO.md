@@ -15,6 +15,7 @@
 - [x] Don't play life loss sound on gameover
 - [x] Fixed printf debugging by removing "-mwindows" from make.bat
 - [x] Fix sprite system not updating or drawing anything but the first entry in array
+- [x] Add heart animation for lives
 - [ ] Move animations into Sprite pool
 - [ ] Array length variables
 - [ ] Load spritesheet inline?
@@ -24,6 +25,8 @@
 - [ ] Show level reached on gameover screen
 - [ ] Gameover death animation
 - [ ] Game mode change transition effects
-- [ ] Add heart animation for lives
 - [ ] Create struct to handle basic timers?
 - [ ] Create level system and move to next level after screen cleared
+- [ ] Finish lives system, show hearts only when you loose one
+- [ ] Better heart animation
+- [ ] UpdateSprites needs to delete animation if it's not repeating

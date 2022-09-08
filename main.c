@@ -342,7 +342,9 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
-						sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){20, 20}, true, 7, (Vector2){13, 0}, true, 0.2);
+						sprites[0] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){9, 19}, true, 7, (Vector2){13, 0}, true, 0.2);
+						sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, true, 7, (Vector2){13, 0}, true, 0.2);
+						sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){37, 19}, true, 7, (Vector2){13, 0}, true, 0.2);
 				}
 			}
 
