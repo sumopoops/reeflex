@@ -116,12 +116,11 @@ Sprite BlankSprite() {
 	return newBlankSprite;
 }
 
-Sprite NewSprite(Rectangle rec, Vector2 loc, bool anim, int frames, Vector2 frameAjustment, bool repeatFrames, float animSpeed) {
+Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, Vector2 frameAjustment, bool repeatFrames, float animSpeed) {
 	Sprite newSprite;
 	newSprite.exists = true;
 	newSprite.rec = rec;
 	newSprite.loc = loc;
-	newSprite.anim = anim;
 	newSprite.frames = frames;
 	newSprite.frameAjustment = frameAjustment;
 	newSprite.repeatAnim = repeatFrames;
@@ -166,12 +165,17 @@ Circle NewCircle() {
 
 void UpdateSprites() {
 	for (int i=0; i<30; i++) {
-		if (sprites[i].exists) {
-			sprites[i].animTick += sprites[i].animSpeed;
-			if (sprites[i].animTick > 1) {
-				sprites[i].animTick = 0;
-				sprites[i].currentFrame++;
-				if (sprites[i].currentFrame > sprites[i].frames-1) sprites[i].currentFrame = 0;
+		if (!sprites[i].exists) continue;
+		sprites[i].animTick += sprites[i].animSpeed;
+		if (sprites[i].animTick > 1) {
+			sprites[i].animTick = 0;
+			sprites[i].currentFrame++;
+			if (sprites[i].currentFrame > sprites[i].frames-1) {
+				if (sprites[i].repeatAnim) {
+					sprites[i].currentFrame = 0;
+				} else {
+					sprites[i].exists = false;
+				}
 			}
 		}
 	}
@@ -203,7 +207,7 @@ int main() {
 	float enemyAnimTick = 0;
 	int animFrame = 0;
 	InitSpriteArray(sprites);
-	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, true, 8, (Vector2){0, 5}, true, 0.18);
+	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, 8, (Vector2){0, 5}, true, 0.18);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -321,6 +325,17 @@ int main() {
 							gameMode = GAMEMODE_GAMEOVER;
 						} else {
 							PlaySound(SND_looseLife);
+							switch (lives) {
+								case 2:
+									sprites[0] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){9, 19}, 8, (Vector2){13, 0}, false, 0.2);
+									sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, (Vector2){13, 0}, false, 0.014);
+									sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){37, 19}, 1, (Vector2){13, 0}, false, 0.014);
+									break;
+								case 1:
+									sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, (Vector2){13, 0}, false, 0.2);
+									sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){37, 19}, 1, (Vector2){13, 0}, false, 0.014);
+									break;
+							}
 						}
 					}
 				}
@@ -342,9 +357,6 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
-						sprites[0] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){9, 19}, true, 7, (Vector2){13, 0}, true, 0.2);
-						sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, true, 7, (Vector2){13, 0}, true, 0.2);
-						sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){37, 19}, true, 7, (Vector2){13, 0}, true, 0.2);
 				}
 			}
 

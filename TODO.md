@@ -16,6 +16,10 @@
 - [x] Fixed printf debugging by removing "-mwindows" from make.bat
 - [x] Fix sprite system not updating or drawing anything but the first entry in array
 - [x] Add heart animation for lives
+- [x] Finish lives system, show hearts only when you loose one
+- [x] Better heart animation
+- [x] UpdateSprites needs to delete animation if it's not repeating
+- [x] Sprites no repeat + no anim properties full working
 - [ ] Move animations into Sprite pool
 - [ ] Array length variables
 - [ ] Load spritesheet inline?
@@ -27,6 +31,3 @@
 - [ ] Game mode change transition effects
 - [ ] Create struct to handle basic timers?
 - [ ] Create level system and move to next level after screen cleared
-- [ ] Finish lives system, show hearts only when you loose one
-- [ ] Better heart animation
-- [ ] UpdateSprites needs to delete animation if it's not repeating
