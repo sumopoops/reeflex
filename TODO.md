@@ -31,3 +31,5 @@
 - [ ] Game mode change transition effects
 - [ ] Create struct to handle basic timers?
 - [ ] Create level system and move to next level after screen cleared
+- [ ] Use release.bat for final build (Add butler support to script?)
+- [ ] Disable controls during life loss animation
