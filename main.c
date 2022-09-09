@@ -70,6 +70,7 @@ Sprite sprites[30];
 int eventQueue = EVENT_EMPTY;
 bool controlsEnabled = true;
 unsigned char gameMode = GAMEMODE_TITLE;
+Sound SND_gameover;
 
 
 
@@ -215,6 +216,7 @@ void ExecuteEventQueue() {
 		case EVENT_GAMEOVER:
 			gameMode = GAMEMODE_GAMEOVER;
 			controlsEnabled = true;
+			PlaySound(SND_gameover);
 			eventQueue = EVENT_EMPTY;
 			break;
 	}
@@ -264,9 +266,10 @@ int main() {
 
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
+	Texture2D TX_gameover_anim = LoadTexture("img/gameover_anim.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
-	Sound SND_gameover = LoadSound("snd/gameover.ogg");
+	SND_gameover = LoadSound("snd/gameover.ogg");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -278,7 +281,7 @@ int main() {
 	Sprite SP_letter_S = {{7, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
-	Sprite SP_gameover = {{0, 67, 39, 17}, {10, 21}};
+	Sprite SP_gameover = {{0, 67, 60, 60}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -340,12 +343,19 @@ int main() {
 				}
 				if (enemyTypeKey != 4) {
 					if (AttackEnemy(enemyTypeKey)) {
+						
+						// Enemy attack sucsess
 						PlaySound(SND_bleep);
+
 					} else {
+
+						// Enemy attack failed
 						lives--;
 						controlsEnabled = false;
 						PlaySound(SND_looseLife);
 						shakeCount = 5;
+
+						// Remove life and play heart animation
 						switch (lives) {
 							case 2:
 								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_ENABLE_CONTROLS);

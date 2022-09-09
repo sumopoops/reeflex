@@ -39,4 +39,5 @@
 - [x] Create event queue system
 - [x] Add some events that are tied to animations ending
 - [x] Event queue handler function, use switch statement and enums for clarity
-- [ ] Fix gameover sound not playing
+- [x] Fix gameover sound not playing
+- [ ] DrawSprites/Sprite allow passing Texture2D, useful for big animations
