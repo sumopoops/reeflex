@@ -33,3 +33,6 @@
 - [ ] Create level system and move to next level after screen cleared
 - [ ] Use release.bat for final build (Add butler support to script?)
 - [ ] Disable controls during life loss animation
+- [ ] Animation for enemy being killed?
+- [x] Black bar under life loss animations
+- [ ] Show last heart animation before game over screen pops up

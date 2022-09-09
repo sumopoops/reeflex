@@ -295,8 +295,8 @@ int main() {
 			shakeTick += shakeRate;
 			if (shakeTick > 1) {
 				if (shakeCount > 0) {
-					shakeVector.x = GetRandomValue(-2, 2);
-					shakeVector.y = GetRandomValue(-2, 2);
+					shakeVector.x = GetRandomValue(-3, 3);
+					shakeVector.y = GetRandomValue(-3, 3);
 					shakeTick = 0;
 					shakeCount--;
 				} else {
@@ -317,7 +317,6 @@ int main() {
 				if (enemyTypeKey != 4) {
 					if (AttackEnemy(enemyTypeKey)) {
 						PlaySound(SND_bleep);
-						shakeCount = 3;
 					} else {
 						lives--;
 						if (!lives) {
@@ -325,15 +324,18 @@ int main() {
 							gameMode = GAMEMODE_GAMEOVER;
 						} else {
 							PlaySound(SND_looseLife);
+							shakeCount = 5;
 							switch (lives) {
 								case 2:
-									sprites[0] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){9, 19}, 8, (Vector2){13, 0}, false, 0.2);
-									sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, (Vector2){13, 0}, false, 0.014);
-									sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){37, 19}, 1, (Vector2){13, 0}, false, 0.014);
+									sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014); // BLACK BAR
+									sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, (Vector2){13, 0}, false, 0.2);
+									sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, (Vector2){13, 0}, false, 0.014);
+									sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, (Vector2){13, 0}, false, 0.014);
 									break;
 								case 1:
-									sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, (Vector2){13, 0}, false, 0.2);
-									sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){37, 19}, 1, (Vector2){13, 0}, false, 0.014);
+									sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014); // BLACK BAR
+									sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, (Vector2){13, 0}, false, 0.2);
+									sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, (Vector2){13, 0}, false, 0.014);
 									break;
 							}
 						}
@@ -381,7 +383,7 @@ int main() {
 		BeginTextureMode(target);
 		
 			// DRAW EVERYTHING HERE
-			ClearBackground((Color){33, 33, 33, 255});
+			ClearBackground(COL_BLACK);
 
 			if (gameMode == GAMEMODE_TITLE) {
 

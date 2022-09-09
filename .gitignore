@@ -4,3 +4,4 @@ include
 .vscode
 main.out
 main_linux
+main.exe
