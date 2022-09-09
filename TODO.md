@@ -32,7 +32,11 @@
 - [ ] Create struct to handle basic timers?
 - [ ] Create level system and move to next level after screen cleared
 - [ ] Use release.bat for final build (Add butler support to script?)
-- [ ] Disable controls during life loss animation
+- [x] Disable controls during life loss animation
 - [ ] Animation for enemy being killed?
 - [x] Black bar under life loss animations
-- [ ] Show last heart animation before game over screen pops up
+- [x] Show last heart animation before game over screen pops up
+- [x] Create event queue system
+- [x] Add some events that are tied to animations ending
+- [x] Event queue handler function, use switch statement and enums for clarity
+- [ ] Fix gameover sound not playing
