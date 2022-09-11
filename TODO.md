@@ -27,8 +27,8 @@
 - [ ] Refactor code, less asset creations
 - [ ] Pass references instead of values?
 - [ ] Show level reached on gameover screen
-- [ ] Gameover death animation
-- [ ] Game mode change transition effects
+- [x] Gameover death animation
+- [x] Game mode change transition effects
 - [ ] Create struct to handle basic timers?
 - [ ] Create level system and move to next level after screen cleared
 - [ ] Use release.bat for final build (Add butler support to script?)
@@ -40,4 +40,5 @@
 - [x] Add some events that are tied to animations ending
 - [x] Event queue handler function, use switch statement and enums for clarity
 - [x] Fix gameover sound not playing
-- [ ] DrawSprites/Sprite allow passing Texture2D, useful for big animations
+- [x] DrawSprites/Sprite allow passing Texture2D, useful for big animations
+- [x] Gameover wipe flicker

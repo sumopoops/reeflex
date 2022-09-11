@@ -48,6 +48,8 @@ enum gameModes {
 enum events {
 	EVENT_EMPTY,
 	EVENT_ENABLE_CONTROLS,
+	EVENT_GAMEOVER_SCROLL,
+	EVENT_GAMEOVER_ANIM,
 	EVENT_GAMEOVER
 };
 
@@ -58,7 +60,6 @@ enum events {
 const int screenWidth = 60;
 const int screenHeight = 60;
 int grid[GRID_HEIGHT][GRID_WIDTH];
-Texture2D textures[10];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
 int currentLevel = 1;
@@ -213,8 +214,16 @@ void ExecuteEventQueue() {
 			controlsEnabled = true;
 			eventQueue = EVENT_EMPTY;
 			break;
-		case EVENT_GAMEOVER:
+		case EVENT_GAMEOVER_SCROLL:
+			sprites[7] = NewSprite((Rectangle){0, 180, 60, 60}, (Vector2){0, 0}, 82, (Vector2){0, -1}, false, 3, EVENT_GAMEOVER_ANIM);
+			eventQueue = EVENT_EMPTY;
+			break;
+		case EVENT_GAMEOVER_ANIM:
+			sprites[7] = NewSprite((Rectangle){0, 964, 60, 60}, (Vector2){0, 0}, 14, (Vector2){60, 0}, false, 0.3, EVENT_GAMEOVER);
 			gameMode = GAMEMODE_GAMEOVER;
+			eventQueue = EVENT_EMPTY;
+			break;
+		case EVENT_GAMEOVER:
 			controlsEnabled = true;
 			PlaySound(SND_gameover);
 			eventQueue = EVENT_EMPTY;
@@ -369,7 +378,7 @@ int main() {
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, (Vector2){13, 0}, false, 0.014, EVENT_EMPTY);
 								break;
 							case 0:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER_ANIM);
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
 								break;
 						}
@@ -378,7 +387,10 @@ int main() {
 			}
 
 			timeLeft -= 0.06;
-			if (timeLeft <= 0) gameMode = GAMEMODE_GAMEOVER;
+			if (timeLeft <= 0) {
+				eventQueue = EVENT_GAMEOVER_ANIM;
+				ExecuteEventQueue();
+			}
 
 			// Check for all enemies being dead
 			if (!types[0] && !types[1] && !types[2] && !types[3]) {
@@ -412,6 +424,7 @@ int main() {
 		// Always run
 		ExecuteEventQueue();
 		UpdateSprites(sprites);
+		printf("GAME MODE: %d\n", gameMode);
 		
 
 		// TEXTURE DRAW
