@@ -42,3 +42,6 @@
 - [x] Fix gameover sound not playing
 - [x] DrawSprites/Sprite allow passing Texture2D, useful for big animations
 - [x] Gameover wipe flicker
+- [ ] Show time played on gameover and/or show score that is calculated from level+time
+- [ ] Bonus score for beating all 3 worlds
+- [ ] Ending animation for beating game

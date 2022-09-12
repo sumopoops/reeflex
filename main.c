@@ -48,7 +48,6 @@ enum gameModes {
 enum events {
 	EVENT_EMPTY,
 	EVENT_ENABLE_CONTROLS,
-	EVENT_GAMEOVER_SCROLL,
 	EVENT_GAMEOVER_ANIM,
 	EVENT_GAMEOVER
 };
@@ -72,6 +71,8 @@ int eventQueue = EVENT_EMPTY;
 bool controlsEnabled = true;
 unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
+double gameTime;
+int score;
 
 
 
@@ -100,6 +101,7 @@ void ResetLevel() {
 
 	// Reset timer
 	timeLeft = 56;
+
 }
 
 void PrintGrid() {
@@ -214,10 +216,6 @@ void ExecuteEventQueue() {
 			controlsEnabled = true;
 			eventQueue = EVENT_EMPTY;
 			break;
-		case EVENT_GAMEOVER_SCROLL:
-			sprites[7] = NewSprite((Rectangle){0, 180, 60, 60}, (Vector2){0, 0}, 82, (Vector2){0, -1}, false, 3, EVENT_GAMEOVER_ANIM);
-			eventQueue = EVENT_EMPTY;
-			break;
 		case EVENT_GAMEOVER_ANIM:
 			sprites[7] = NewSprite((Rectangle){0, 964, 60, 60}, (Vector2){0, 0}, 14, (Vector2){60, 0}, false, 0.3, EVENT_GAMEOVER);
 			gameMode = GAMEMODE_GAMEOVER;
@@ -275,7 +273,6 @@ int main() {
 
 	// Load assets
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
-	Texture2D TX_gameover_anim = LoadTexture("img/gameover_anim.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
@@ -380,21 +377,32 @@ int main() {
 							case 0:
 								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER_ANIM);
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
+								printf("TIME: \e[32m%f\e[0m\n", (GetTime()-gameTime)); //TEMP
+								score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
+								if (score < 0) score = 0; //TEMP
+								if (currentLevel == 1) score = 0; //TEMP
+								printf("\e[35mSCORE:\e[0m \e[45m%d\e[0m\n", score); //TEMP
 								break;
 						}
 					}
 				}
 			}
 
-			timeLeft -= 0.06;
+			if (controlsEnabled) timeLeft -= 0.06;
 			if (timeLeft <= 0) {
 				eventQueue = EVENT_GAMEOVER_ANIM;
 				ExecuteEventQueue();
+				printf("TIME: \e[32m%f\e[0m\n", (GetTime()-gameTime)); //TEMP
+				score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
+				if (score < 0) score = 0; //TEMP
+				if (currentLevel == 1) score = 0; //TEMP
+				printf("\e[35mSCORE:\e[0m \e[45m%d\e[0m\n", score); //TEMP
 			}
 
 			// Check for all enemies being dead
 			if (!types[0] && !types[1] && !types[2] && !types[3]) {
 				currentLevel += 2;
+				printf("LEVEL: \e[31m%d\e[0m\n", currentLevel); //TEMP
 				ResetLevel();
 			}
 
@@ -405,6 +413,7 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
+						gameTime = GetTime();
 				}
 			}
 
@@ -416,6 +425,7 @@ int main() {
 						currentLevel = 1;
 						gameMode = GAMEMODE_HELP;
 						lives = 3;
+						gameTime = GetTime();
 				}
 			}
 
@@ -424,8 +434,6 @@ int main() {
 		// Always run
 		ExecuteEventQueue();
 		UpdateSprites(sprites);
-		printf("GAME MODE: %d\n", gameMode);
-		
 
 		// TEXTURE DRAW
 		BeginTextureMode(target);
