@@ -45,3 +45,5 @@
 - [ ] Show time played on gameover and/or show score that is calculated from level+time
 - [ ] Bonus score for beating all 3 worlds
 - [ ] Ending animation for beating game
+- [ ] Refine scoring
+- [ ] Fix alignment of score

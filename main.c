@@ -276,6 +276,7 @@ int main() {
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
+	Font font = LoadFont("img/font.png");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -477,6 +478,8 @@ int main() {
 			} else if (gameMode == GAMEMODE_GAMEOVER) {
 
 				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
+				DrawTextEx(font, "SCORE", (Vector2){15, 40}, font.baseSize, 1, COL_WHITE);
+				DrawTextEx(font, TextFormat("%i", score), (Vector2){20, 47}, font.baseSize, 1, COL_WHITE);
 
 			}
 			
