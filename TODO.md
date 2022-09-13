@@ -22,11 +22,10 @@
 - [x] Sprites no repeat + no anim properties full working
 - [ ] Move animations into Sprite pool
 - [ ] Array length variables
-- [ ] Load spritesheet inline?
-- [ ] Better sounds
+- [ ] Load spritesheet inline? Or asset pack
+- [x] Better sounds
 - [ ] Refactor code, less asset creations
-- [ ] Pass references instead of values?
-- [ ] Show level reached on gameover screen
+- [x] Show level reached on gameover screen
 - [x] Gameover death animation
 - [x] Game mode change transition effects
 - [ ] Create struct to handle basic timers?
@@ -42,7 +41,7 @@
 - [x] Fix gameover sound not playing
 - [x] DrawSprites/Sprite allow passing Texture2D, useful for big animations
 - [x] Gameover wipe flicker
-- [ ] Show time played on gameover and/or show score that is calculated from level+time
+- [x] Show time played on gameover and/or show score that is calculated from level+time
 - [ ] Bonus score for beating all 3 worlds
 - [ ] Ending animation for beating game
 - [ ] Refine scoring

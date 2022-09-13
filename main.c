@@ -73,6 +73,7 @@ unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
 double gameTime;
 int score;
+int world = 1;
 
 
 
@@ -212,20 +213,27 @@ void DrawSprites(Texture2D spriteSheet) {
 
 void ExecuteEventQueue() {
 	switch (eventQueue) {
+
 		case EVENT_ENABLE_CONTROLS:
 			controlsEnabled = true;
 			eventQueue = EVENT_EMPTY;
 			break;
+
 		case EVENT_GAMEOVER_ANIM:
+			PlaySound(SND_gameover);
 			sprites[7] = NewSprite((Rectangle){0, 964, 60, 60}, (Vector2){0, 0}, 14, (Vector2){60, 0}, false, 0.3, EVENT_GAMEOVER);
 			gameMode = GAMEMODE_GAMEOVER;
+			score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
+			if (score < 0) score = 0; //TEMP
+			if (currentLevel == 1) score = 0; //TEMP
 			eventQueue = EVENT_EMPTY;
 			break;
+
 		case EVENT_GAMEOVER:
 			controlsEnabled = true;
-			PlaySound(SND_gameover);
 			eventQueue = EVENT_EMPTY;
 			break;
+			
 	}
 }
 
@@ -380,23 +388,17 @@ int main() {
 								scoreScrollY = 50;
 								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER_ANIM);
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
-								score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
-								if (score < 0) score = 0; //TEMP
-								if (currentLevel == 1) score = 0; //TEMP
 								break;
 						}
 					}
 				}
 			}
 
+			// Timer runs out
 			if (controlsEnabled) timeLeft -= 0.06;
 			if (timeLeft <= 0) {
 				scoreScrollY = 50;
 				eventQueue = EVENT_GAMEOVER_ANIM;
-				ExecuteEventQueue();
-				score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
-				if (score < 0) score = 0; //TEMP
-				if (currentLevel == 1) score = 0; //TEMP
 			}
 
 			// Check for all enemies being dead
@@ -424,6 +426,7 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						currentLevel = 1;
 						gameMode = GAMEMODE_HELP;
+						StopSound(SND_gameover);
 						lives = 3;
 						gameTime = GetTime();
 				}
