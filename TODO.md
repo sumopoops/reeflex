@@ -47,4 +47,4 @@
 - [ ] Ending animation for beating game
 - [ ] Refine scoring
 - [x] Fix alignment of score
-- [ ] Score slide in from bottom?
+- [x] Score slide in from bottom?

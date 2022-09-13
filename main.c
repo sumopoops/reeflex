@@ -247,6 +247,7 @@ int main() {
 	Circle circles[10] = {0};
 	int circleArrLength = sizeof(circles)/sizeof(Circle);
 	for (int i=0; i<circleArrLength; i++) circles[i] = NewCircle();
+	float scoreScrollY = 40;
 
 	// Shake shake
 	Vector2 shakeVector = {0, 0};
@@ -376,6 +377,7 @@ int main() {
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, (Vector2){13, 0}, false, 0.014, EVENT_EMPTY);
 								break;
 							case 0:
+								scoreScrollY = 50;
 								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER_ANIM);
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
 								score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
@@ -389,6 +391,7 @@ int main() {
 
 			if (controlsEnabled) timeLeft -= 0.06;
 			if (timeLeft <= 0) {
+				scoreScrollY = 50;
 				eventQueue = EVENT_GAMEOVER_ANIM;
 				ExecuteEventQueue();
 				score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
@@ -425,6 +428,8 @@ int main() {
 						gameTime = GetTime();
 				}
 			}
+
+			if (scoreScrollY > 0) scoreScrollY -= 0.4;
 
 		}
 
@@ -474,9 +479,9 @@ int main() {
 			} else if (gameMode == GAMEMODE_GAMEOVER) {
 
 				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
-				DrawTextEx(font, "SCORE", (Vector2){15, 40}, font.baseSize, 1, COL_WHITE);
+				DrawTextEx(font, "SCORE", (Vector2){15, 40+scoreScrollY}, font.baseSize, 1, COL_WHITE);
 				Vector2 scoreWidth = MeasureTextEx(font, TextFormat("%i", score), font.baseSize, 1);
-				DrawTextEx(font, TextFormat("%i", score), (Vector2){(int)(60 - scoreWidth.x)/2, 46}, font.baseSize, 1, COL_WHITE);
+				DrawTextEx(font, TextFormat("%i", score), (Vector2){(int)(60 - scoreWidth.x)/2, 46+scoreScrollY}, font.baseSize, 1, COL_WHITE);
 
 			}
 			
