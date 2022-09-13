@@ -378,11 +378,9 @@ int main() {
 							case 0:
 								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER_ANIM);
 								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
-								printf("TIME: \e[32m%f\e[0m\n", (GetTime()-gameTime)); //TEMP
 								score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
 								if (score < 0) score = 0; //TEMP
 								if (currentLevel == 1) score = 0; //TEMP
-								printf("\e[35mSCORE:\e[0m \e[45m%d\e[0m\n", score); //TEMP
 								break;
 						}
 					}
@@ -393,11 +391,9 @@ int main() {
 			if (timeLeft <= 0) {
 				eventQueue = EVENT_GAMEOVER_ANIM;
 				ExecuteEventQueue();
-				printf("TIME: \e[32m%f\e[0m\n", (GetTime()-gameTime)); //TEMP
 				score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
 				if (score < 0) score = 0; //TEMP
 				if (currentLevel == 1) score = 0; //TEMP
-				printf("\e[35mSCORE:\e[0m \e[45m%d\e[0m\n", score); //TEMP
 			}
 
 			// Check for all enemies being dead
@@ -479,7 +475,8 @@ int main() {
 
 				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
 				DrawTextEx(font, "SCORE", (Vector2){15, 40}, font.baseSize, 1, COL_WHITE);
-				DrawTextEx(font, TextFormat("%i", score), (Vector2){20, 47}, font.baseSize, 1, COL_WHITE);
+				Vector2 scoreWidth = MeasureTextEx(font, TextFormat("%i", score), font.baseSize, 1);
+				DrawTextEx(font, TextFormat("%i", score), (Vector2){(int)(60 - scoreWidth.x)/2, 46}, font.baseSize, 1, COL_WHITE);
 
 			}
 			

@@ -46,4 +46,5 @@
 - [ ] Bonus score for beating all 3 worlds
 - [ ] Ending animation for beating game
 - [ ] Refine scoring
-- [ ] Fix alignment of score
+- [x] Fix alignment of score
+- [ ] Score slide in from bottom?
