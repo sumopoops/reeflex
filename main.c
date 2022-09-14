@@ -5,6 +5,7 @@
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
 #define STARTING_LEVEL 3
+#define STARTING_WORLD 1
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -74,7 +75,8 @@ unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
 double gameTime;
 int score;
-int world = 1;
+int world = STARTING_WORLD;
+float world2Tick = 0;
 
 
 
@@ -104,6 +106,23 @@ void ResetLevel() {
 	// Reset timer
 	timeLeft = 56;
 
+}
+
+void MoveEnemies() {
+	for (int y=0; y<GRID_HEIGHT; y++) {
+		for (int x=0; x<GRID_WIDTH; x++) {
+			if (grid[y][x]) {
+				int moveDirY = GetRandomValue(-1, 1);
+				int moveDirX = GetRandomValue(-1, 1);
+				if (moveDirY+y < 0 || moveDirY+y > (GRID_HEIGHT-1)) continue;
+				if (moveDirY+x < 0 || moveDirX+x > (GRID_WIDTH-1)) continue;
+				if (grid[y+moveDirY][x+moveDirX] == 0) {
+					grid[y+moveDirY][x+moveDirX] = grid[y][x];
+					grid[y][x] = 0;
+				}
+			}
+		}
+	}
 }
 
 void PrintGrid() {
@@ -332,11 +351,20 @@ int main() {
 
 		} else if (gameMode == GAMEMODE_GAME) {
 
-			// Animation tick
+			// Animation tick / World 2 scramble enemies
 			enemyAnimTick += enemyAnimRate;
 			if (enemyAnimTick > 1) {
 				enemyAnimTick = 0;
 				animFrame = !animFrame;
+			}
+
+			// World 2
+			if (world == 2) {
+				world2Tick += 0.01;
+				if (world2Tick > 1) {
+					world2Tick = 0;
+					MoveEnemies();
+				}
 			}
 
 			// Shake tick
@@ -427,7 +455,7 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 
 						// Reset gameplay
-						world = 1;
+						world = STARTING_WORLD;
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
 						gameTime = GetTime();

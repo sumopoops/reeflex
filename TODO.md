@@ -47,7 +47,9 @@
 - [ ] Refine scoring
 - [x] Fix alignment of score
 - [x] Score slide in from bottom?
-- [ ] Scramble enemy positions function, use in world 2
+- [x] Scramble enemy positions function, use in world 2
 - [ ] Intro/title screen song
 - [ ] Create intro game mode (logo?)
 - [ ] Test screen switching bug on TV
+- [x] Fix enemies scrambling off screen
+- [x] Slower scrable speed
