@@ -29,7 +29,7 @@
 - [x] Gameover death animation
 - [x] Game mode change transition effects
 - [ ] Create struct to handle basic timers?
-- [ ] Create level system and move to next level after screen cleared
+- [ ] Create world system and move to next level after screen cleared
 - [ ] Use release.bat for final build (Add butler support to script?)
 - [x] Disable controls during life loss animation
 - [ ] Animation for enemy being killed?

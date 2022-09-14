@@ -4,6 +4,7 @@
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
+#define STARTING_LEVEL 3
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -61,7 +62,7 @@ const int screenHeight = 60;
 int grid[GRID_HEIGHT][GRID_WIDTH];
 int types[ENEMY_TYPE_COUNT] = {0, 0, 0, 0};
 int remainingTargets = 0;
-int currentLevel = 1;
+int currentLevel = STARTING_LEVEL;
 int mode = 1;
 float timeLeft = 56;
 int lives = 3;
@@ -223,14 +224,15 @@ void ExecuteEventQueue() {
 			PlaySound(SND_gameover);
 			sprites[7] = NewSprite((Rectangle){0, 964, 60, 60}, (Vector2){0, 0}, 14, (Vector2){60, 0}, false, 0.3, EVENT_GAMEOVER);
 			gameMode = GAMEMODE_GAMEOVER;
-			score = (int)((currentLevel * 100) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
+			score = (int)(((currentLevel * 100) * world) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
 			if (score < 0) score = 0; //TEMP
-			if (currentLevel == 1) score = 0; //TEMP
+			if (currentLevel == STARTING_LEVEL && world == 1) score = 0; //TEMP
 			eventQueue = EVENT_EMPTY;
 			break;
 
 		case EVENT_GAMEOVER:
 			controlsEnabled = true;
+			printf("SCORE: \e[34m%d\e[0m\n", score);
 			eventQueue = EVENT_EMPTY;
 			break;
 			
@@ -403,7 +405,14 @@ int main() {
 
 			// Check for all enemies being dead
 			if (!types[0] && !types[1] && !types[2] && !types[3]) {
-				currentLevel += 2;
+				currentLevel += 3;
+				if (currentLevel > 30) {
+
+					// World completed
+					currentLevel = STARTING_LEVEL;
+					world++;
+
+				}
 				printf("LEVEL: \e[31m%d\e[0m\n", currentLevel); //TEMP
 				ResetLevel();
 			}
@@ -413,6 +422,9 @@ int main() {
 			if (controlsEnabled) {
 				switch (GetKeyPressed()) {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
+
+						// Reset gameplay
+						world = 1;
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
 						gameTime = GetTime();
@@ -424,7 +436,7 @@ int main() {
 			if (controlsEnabled) {
 				switch (GetKeyPressed()) {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
-						currentLevel = 1;
+						currentLevel = STARTING_LEVEL;
 						gameMode = GAMEMODE_HELP;
 						StopSound(SND_gameover);
 						lives = 3;
