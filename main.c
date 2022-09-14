@@ -286,6 +286,7 @@ int main() {
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
+	Sound SND_title_music = LoadSound("snd/title_music.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
 	Font font = LoadFont("img/font.png");
 
@@ -307,6 +308,7 @@ int main() {
 
 	// Init
 	ResetLevel();
+	PlaySound(SND_title_music);
 
     while (!WindowShouldClose()) {
 
@@ -318,6 +320,7 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 						InitSpriteArray(sprites);
 						gameMode = GAMEMODE_HELP;
+						StopSound(SND_title_music);
 				}
 			}
 			for (int i=0; i<circleArrLength; i++) {
