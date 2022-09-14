@@ -224,7 +224,7 @@ void ExecuteEventQueue() {
 			PlaySound(SND_gameover);
 			sprites[7] = NewSprite((Rectangle){0, 964, 60, 60}, (Vector2){0, 0}, 14, (Vector2){60, 0}, false, 0.3, EVENT_GAMEOVER);
 			gameMode = GAMEMODE_GAMEOVER;
-			score = (int)(((currentLevel * 100) * world) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
+			score = (int)(((currentLevel * 100) +(3000*(world-1))) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
 			if (score < 0) score = 0; //TEMP
 			if (currentLevel == STARTING_LEVEL && world == 1) score = 0; //TEMP
 			eventQueue = EVENT_EMPTY;
