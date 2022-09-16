@@ -371,7 +371,7 @@ int main() {
 
 			// World 2
 			if (world == 2) {
-				world2Tick += 0.01;
+				world2Tick += 0.015;
 				if (world2Tick > 1) {
 					world2Tick = 0;
 					MoveEnemies();
