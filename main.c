@@ -5,7 +5,7 @@
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
 #define STARTING_LEVEL 3
-#define STARTING_WORLD 1
+#define STARTING_WORLD 2
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -116,9 +116,16 @@ void MoveEnemies() {
 				int moveDirX = GetRandomValue(-1, 1);
 				if (moveDirY+y < 0 || moveDirY+y > (GRID_HEIGHT-1)) continue;
 				if (moveDirY+x < 0 || moveDirX+x > (GRID_WIDTH-1)) continue;
+
+				// If space is empty, move enemy there
 				if (grid[y+moveDirY][x+moveDirX] == 0) {
 					grid[y+moveDirY][x+moveDirX] = grid[y][x];
 					grid[y][x] = 0;
+				} else {
+					// Swap positions with enemy
+					int tempSwap = grid[y][x];
+					grid[y][x] = grid[y+moveDirY][x+moveDirX];
+					grid[y+moveDirY][x+moveDirX] = tempSwap;
 				}
 			}
 		}
@@ -170,6 +177,10 @@ void InitSpriteArray(Sprite spriteArray[]) {
 	for (int i=0; i<(sizeof(*spriteArray)/sizeof(Sprite)); i++) {
 		spriteArray[i] = BlankSprite();
 	}
+}
+
+void PrintEnemyCount() {
+	printf("ENEMY COUNT: %d\n", types[0]+types[1]+types[2]+types[3]);
 }
 
 bool AttackEnemy(int type) {
