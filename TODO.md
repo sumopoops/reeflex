@@ -53,3 +53,4 @@
 - [ ] Test screen switching bug on TV
 - [x] Fix enemies scrambling off screen
 - [x] Slower scrable speed
+- [ ] Scramble needs to switch places
