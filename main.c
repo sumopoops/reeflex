@@ -180,7 +180,8 @@ void InitSpriteArray(Sprite spriteArray[]) {
 }
 
 void PrintEnemyCount() {
-	printf("ENEMY COUNT: %d\n", types[0]+types[1]+types[2]+types[3]);
+	//printf("ENEMY COUNT: %d\n", types[0]+types[1]+types[2]+types[3]);
+	printf("ENEMY TYPES: \e[33m%d, %d, %d, %d\e[0m\n", types[0], types[1], types[2], types[3]);
 }
 
 bool AttackEnemy(int type) {
@@ -366,6 +367,7 @@ int main() {
 			enemyAnimTick += enemyAnimRate;
 			if (enemyAnimTick > 1) {
 				enemyAnimTick = 0;
+				PrintEnemyCount();
 				animFrame = !animFrame;
 			}
 
@@ -439,7 +441,7 @@ int main() {
 			}
 
 			// Timer runs out
-			if (controlsEnabled) timeLeft -= 0.06;
+			//if (controlsEnabled) timeLeft -= 0.06;
 			if (timeLeft <= 0) {
 				scoreScrollY = 50;
 				eventQueue = EVENT_GAMEOVER_ANIM;
