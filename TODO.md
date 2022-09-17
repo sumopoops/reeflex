@@ -58,3 +58,4 @@
 - [ ] Unpause level timer after debugging
 - [ ] Fix disappearing enemy glitch
 - [ ] Change explosion animation (Make smaller?)
+- [ ] Refactor animation system to use less parameters, use function pointers
