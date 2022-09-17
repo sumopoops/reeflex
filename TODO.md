@@ -57,3 +57,4 @@
 - [x] Make sure scrambling doesn't delete enemy count/type
 - [ ] Unpause level timer after debugging
 - [ ] Fix disappearing enemy glitch
+- [ ] Change explosion animation (Make smaller?)

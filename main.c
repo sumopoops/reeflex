@@ -132,15 +132,19 @@ void MoveEnemies() {
 	}
 }
 
-void PrintGrid() {
+void PrintGrid(bool clearScreen) {
+	int explosions = 0;
+	if (clearScreen) printf("\033[2J\033[H");
 	for (int y=0; y<GRID_HEIGHT; y++) {
 		printf("\n");
 		for (int x=0; x<GRID_WIDTH; x++) {
-			printf("%d ", grid[y][x]);
+			grid[y][x] ? printf("\e[32m%d\e[0m ", grid[y][x]) : printf("%d ", grid[y][x]);
+			if (grid[y][x] == 5) explosions++;
 		}
 	}
 	printf("\n\nTYPES: \33[31m");
 	for (int i=0; i<ENEMY_TYPE_COUNT; i++) printf("%d ", types[i]);
+	printf("%d", explosions);
 	printf("\33[0m\n");
 }
 
@@ -367,7 +371,7 @@ int main() {
 			enemyAnimTick += enemyAnimRate;
 			if (enemyAnimTick > 1) {
 				enemyAnimTick = 0;
-				PrintEnemyCount();
+				PrintGrid(false); //TEMP
 				animFrame = !animFrame;
 			}
 
