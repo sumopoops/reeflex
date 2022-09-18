@@ -15,7 +15,6 @@ typedef struct Sprite {
 	bool anim;
 	int frames;
 	int currentFrame;
-	Vector2 frameAjustment;
 	bool repeatAnim;
 	bool exists;
 	float animTick;
@@ -123,6 +122,7 @@ void MoveEnemies() {
 					grid[y][x] = 0;
 				} else {
 					// Swap positions with enemy
+					printf("X: %d Y: %d  \e[95m<----->\e[0m  X: %d Y: %d\n", x, y, x+moveDirX, y+moveDirY);
 					int tempSwap = grid[y][x];
 					grid[y][x] = grid[y+moveDirY][x+moveDirX];
 					grid[y+moveDirY][x+moveDirX] = tempSwap;
@@ -133,6 +133,7 @@ void MoveEnemies() {
 }
 
 void PrintGrid(bool clearScreen) {
+	printf("\n\e[33m____________________________________________\e[0m\n\n");
 	int explosions = 0;
 	if (clearScreen) printf("\033[2J\033[H");
 	for (int y=0; y<GRID_HEIGHT; y++) {
@@ -145,7 +146,7 @@ void PrintGrid(bool clearScreen) {
 	printf("\n\nTYPES: \33[31m");
 	for (int i=0; i<ENEMY_TYPE_COUNT; i++) printf("%d ", types[i]);
 	printf("%d", explosions);
-	printf("\33[0m\n");
+	printf("\33[0m\n\n");
 }
 
 void DrawIconGrid(Texture2D sheet, int frame, Vector2 shakeVector) {
@@ -162,13 +163,12 @@ Sprite BlankSprite() {
 	return newBlankSprite;
 }
 
-Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, Vector2 frameAjustment, bool repeatFrames, float animSpeed, int eventOnFinish) {
+Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, float animSpeed, int eventOnFinish) {
 	Sprite newSprite;
 	newSprite.exists = true;
 	newSprite.rec = rec;
 	newSprite.loc = loc;
 	newSprite.frames = frames;
-	newSprite.frameAjustment = frameAjustment;
 	newSprite.repeatAnim = repeatFrames;
 	newSprite.animTick = 0;
 	newSprite.animSpeed = animSpeed;
@@ -181,11 +181,6 @@ void InitSpriteArray(Sprite spriteArray[]) {
 	for (int i=0; i<(sizeof(*spriteArray)/sizeof(Sprite)); i++) {
 		spriteArray[i] = BlankSprite();
 	}
-}
-
-void PrintEnemyCount() {
-	//printf("ENEMY COUNT: %d\n", types[0]+types[1]+types[2]+types[3]);
-	printf("ENEMY TYPES: \e[33m%d, %d, %d, %d\e[0m\n", types[0], types[1], types[2], types[3]);
 }
 
 bool AttackEnemy(int type) {
@@ -238,8 +233,8 @@ void DrawSprites(Texture2D spriteSheet) {
 	for (int i=0; i<30; i++) {
 		if (sprites[i].exists) {
 			Rectangle frameRec;
-			frameRec.x = sprites[i].rec.x + sprites[i].frameAjustment.x* sprites[i].currentFrame;
-			frameRec.y = sprites[i].rec.y + sprites[i].frameAjustment.y * sprites[i].currentFrame;
+			frameRec.x = sprites[i].rec.x + sprites[i].rec.width * sprites[i].currentFrame;
+			frameRec.y = sprites[i].rec.y;
 			frameRec.width = sprites[i].rec.width;
 			frameRec.height = sprites[i].rec.height;
 			DrawTextureRec(spriteSheet, frameRec, sprites[i].loc, WHITE);
@@ -257,7 +252,7 @@ void ExecuteEventQueue() {
 
 		case EVENT_GAMEOVER_ANIM:
 			PlaySound(SND_gameover);
-			sprites[7] = NewSprite((Rectangle){0, 964, 60, 60}, (Vector2){0, 0}, 14, (Vector2){60, 0}, false, 0.3, EVENT_GAMEOVER);
+			sprites[7] = NewSprite((Rectangle){0, 67, 60, 60}, (Vector2){0, 0}, 14, false, 0.3, EVENT_GAMEOVER);
 			gameMode = GAMEMODE_GAMEOVER;
 			score = (int)(((currentLevel * 100) +(3000*(world-1))) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
 			if (score < 0) score = 0; //TEMP
@@ -286,7 +281,7 @@ int main() {
 	float enemyAnimTick = 0;
 	int animFrame = 0;
 	InitSpriteArray(sprites);
-	sprites[0] = NewSprite((Rectangle){60, 20, 27, 5}, (Vector2){16, 47}, 8, (Vector2){0, 5}, true, 0.18, EVENT_EMPTY);
+	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, EVENT_EMPTY);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -335,7 +330,7 @@ int main() {
 	Sprite SP_letter_S = {{7, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
-	Sprite SP_gameover = {{0, 67, 60, 60}, {0, 0}};
+	Sprite SP_gameover = {{780, 67, 60, 60}, {0, 0}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -424,20 +419,20 @@ int main() {
 						// Remove life and play heart animation
 						switch (lives) {
 							case 2:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_ENABLE_CONTROLS);
-								sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
-								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, (Vector2){13, 0}, false, 0.014, EVENT_EMPTY);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, (Vector2){13, 0}, false, 0.014, EVENT_EMPTY);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS);
+								sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, false, 0.2, EVENT_EMPTY);
+								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, false, 0.014, EVENT_EMPTY);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY);
 								break;
 							case 1:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_ENABLE_CONTROLS);
-								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, (Vector2){13, 0}, false, 0.014, EVENT_EMPTY);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS);
+								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, false, 0.2, EVENT_EMPTY);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY);
 								break;
 							case 0:
 								scoreScrollY = 50;
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, (Vector2){0, 0}, false, 0.014, EVENT_GAMEOVER_ANIM);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, (Vector2){13, 0}, false, 0.2, EVENT_EMPTY);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_GAMEOVER_ANIM);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, false, 0.2, EVENT_EMPTY);
 								break;
 						}
 					}
