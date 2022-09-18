@@ -122,11 +122,11 @@ void MoveEnemies() {
 					grid[y][x] = 0;
 				} else {
 					// Swap positions with enemy
-					printf("X: %d Y: %d  \e[95m<----->\e[0m  X: %d Y: %d\n", x, y, x+moveDirX, y+moveDirY);
 					int tempSwap = grid[y][x];
 					grid[y][x] = grid[y+moveDirY][x+moveDirX];
 					grid[y+moveDirY][x+moveDirX] = tempSwap;
 				}
+				printf("X: %d Y: %d  \e[95m<----->\e[0m  X: %d Y: %d\n", x, y, x+moveDirX, y+moveDirY);
 			}
 		}
 	}
@@ -154,6 +154,20 @@ void DrawIconGrid(Texture2D sheet, int frame, Vector2 shakeVector) {
 		for (int x=0; x<GRID_WIDTH; x++) {
 			if (grid[y][x])
 			DrawTextureRec(sheet, (Rectangle){(grid[y][x]-1)*10, frame*10, 10, 10}, (Vector2){(x*10)+shakeVector.x, (y*10)+shakeVector.y}, WHITE);
+		}
+	}
+}
+
+void UpdateTypes() {
+	for (int i; i<4; i++) types[i] = 0;
+	for (int y=0; y<GRID_HEIGHT; y++) {
+		for (int x=0; x<GRID_WIDTH; x++) {
+			switch (grid[y][x]) {
+				case 0: types[0]++; break;
+				case 1: types[1]++; break;
+				case 2: types[2]++; break;
+				case 3: types[3]++; break;
+			}
 		}
 	}
 }
