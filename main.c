@@ -4,7 +4,7 @@
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 3
+#define STARTING_LEVEL 27
 #define STARTING_WORLD 2
 
 //---------------------------------------------------------------------------------------- STRUCTS
@@ -107,15 +107,20 @@ void ResetLevel() {
 
 }
 
-void MoveEnemies() {
+void MoveEnemies(bool printResult) {
 	for (int y=0; y<GRID_HEIGHT; y++) {
 		for (int x=0; x<GRID_WIDTH; x++) {
 			if (grid[y][x]) {
 				int moveDirY = GetRandomValue(-1, 1);
 				int moveDirX = GetRandomValue(-1, 1);
-				if (moveDirY+y < 0 || moveDirY+y > (GRID_HEIGHT-1)) continue;
-				if (moveDirY+x < 0 || moveDirX+x > (GRID_WIDTH-1)) continue;
+				if (!moveDirX && !moveDirY) continue;
+				if (moveDirY+y < 0 || moveDirY+y > (GRID_HEIGHT-1) || moveDirX+x < 0 || moveDirX+x > (GRID_WIDTH-1)) {
+					if (printResult) printf("\e[30mX: %d Y: %d V: %d  \e[91m   X   \e[0m  \e[30mX: %d Y: %d V: %d\e[0m\n", x, y, grid[y][x], x+moveDirX, y+moveDirY, grid[y+moveDirY][x+moveDirX]);
+					// Move not allowed
+					continue;
+				}
 
+				if (printResult) printf("X: %d Y: %d V: %d  \e[95m<----->\e[0m  X: %d Y: %d V: %d\n", x, y, grid[y][x], x+moveDirX, y+moveDirY, grid[y+moveDirY][x+moveDirX]);
 				// If space is empty, move enemy there
 				if (grid[y+moveDirY][x+moveDirX] == 0) {
 					grid[y+moveDirY][x+moveDirX] = grid[y][x];
@@ -126,7 +131,6 @@ void MoveEnemies() {
 					grid[y][x] = grid[y+moveDirY][x+moveDirX];
 					grid[y+moveDirY][x+moveDirX] = tempSwap;
 				}
-				printf("X: %d Y: %d  \e[95m<----->\e[0m  X: %d Y: %d\n", x, y, x+moveDirX, y+moveDirY);
 			}
 		}
 	}
@@ -154,20 +158,6 @@ void DrawIconGrid(Texture2D sheet, int frame, Vector2 shakeVector) {
 		for (int x=0; x<GRID_WIDTH; x++) {
 			if (grid[y][x])
 			DrawTextureRec(sheet, (Rectangle){(grid[y][x]-1)*10, frame*10, 10, 10}, (Vector2){(x*10)+shakeVector.x, (y*10)+shakeVector.y}, WHITE);
-		}
-	}
-}
-
-void UpdateTypes() {
-	for (int i; i<4; i++) types[i] = 0;
-	for (int y=0; y<GRID_HEIGHT; y++) {
-		for (int x=0; x<GRID_WIDTH; x++) {
-			switch (grid[y][x]) {
-				case 0: types[0]++; break;
-				case 1: types[1]++; break;
-				case 2: types[2]++; break;
-				case 3: types[3]++; break;
-			}
 		}
 	}
 }
@@ -389,7 +379,7 @@ int main() {
 				world2Tick += 0.015;
 				if (world2Tick > 1) {
 					world2Tick = 0;
-					MoveEnemies();
+					MoveEnemies(true);
 				}
 			}
 
@@ -454,7 +444,7 @@ int main() {
 			}
 
 			// Timer runs out
-			//if (controlsEnabled) timeLeft -= 0.06;
+			if (controlsEnabled) timeLeft -= 0.06;
 			if (timeLeft <= 0) {
 				scoreScrollY = 50;
 				eventQueue = EVENT_GAMEOVER_ANIM;

@@ -55,8 +55,9 @@
 - [x] Slower scrable speed
 - [x] Scramble needs to switch places
 - [x] Make sure scrambling doesn't delete enemy count/type
-- [ ] Unpause level timer after debugging
-- [ ] Fix disappearing enemy glitch
+- [x] Unpause level timer after debugging
+- [x] Fix disappearing enemy glitch
 - [ ] Change explosion animation (Make smaller?)
 - [x] Refactor animation system to use less parameters
 - [ ] Use function pointers for animation ending action?
+- [ ] Start on world 3 (Ideas?)
