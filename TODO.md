@@ -29,7 +29,7 @@
 - [x] Gameover death animation
 - [x] Game mode change transition effects
 - [ ] Create struct to handle basic timers?
-- [ ] Create world system and move to next level after screen cleared
+- [x] Create world system and move to next level after screen cleared
 - [ ] Use release.bat for final build (Add butler support to script?)
 - [x] Disable controls during life loss animation
 - [ ] Animation for enemy being killed?
@@ -50,7 +50,7 @@
 - [x] Scramble enemy positions function, use in world 2
 - [ ] Intro/title screen song
 - [ ] Create intro game mode (logo?)
-- [ ] Test screen switching bug on TV
+- [x] Test screen switching bug on TV
 - [x] Fix enemies scrambling off screen
 - [x] Slower scrable speed
 - [x] Scramble needs to switch places
@@ -60,4 +60,4 @@
 - [ ] Change explosion animation (Make smaller?)
 - [x] Refactor animation system to use less parameters
 - [ ] Use function pointers for animation ending action?
-- [ ] Start on world 3 (Ideas?)
+- [x] Start on world 3 (Ideas?)

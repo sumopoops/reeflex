@@ -4,8 +4,9 @@
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 27
-#define STARTING_WORLD 2
+#define STARTING_LEVEL 30
+#define STARTING_WORLD 3
+#define INVIS_SWITCH_START 0.2
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -43,7 +44,8 @@ enum gameModes {
 	GAMEMODE_TITLE,
 	GAMEMODE_GAME,
 	GAMEMODE_HELP,
-	GAMEMODE_GAMEOVER
+	GAMEMODE_GAMEOVER,
+	GAMEMODE_WIN
 };
 
 enum events {
@@ -76,6 +78,9 @@ double gameTime;
 int score;
 int world = STARTING_WORLD;
 float world2Tick = 0;
+bool lightsOn = true;
+float invisTick = 0;
+float invisSwitch = INVIS_SWITCH_START;
 
 
 
@@ -104,6 +109,7 @@ void ResetLevel() {
 
 	// Reset timer
 	timeLeft = 56;
+	invisSwitch = INVIS_SWITCH_START;
 
 }
 
@@ -266,7 +272,6 @@ void ExecuteEventQueue() {
 
 		case EVENT_GAMEOVER:
 			controlsEnabled = true;
-			printf("SCORE: \e[34m%d\e[0m\n", score);
 			eventQueue = EVENT_EMPTY;
 			break;
 			
@@ -370,7 +375,6 @@ int main() {
 			enemyAnimTick += enemyAnimRate;
 			if (enemyAnimTick > 1) {
 				enemyAnimTick = 0;
-				PrintGrid(false); //TEMP
 				animFrame = !animFrame;
 			}
 
@@ -379,7 +383,17 @@ int main() {
 				world2Tick += 0.015;
 				if (world2Tick > 1) {
 					world2Tick = 0;
-					MoveEnemies(true);
+					MoveEnemies(false);
+				}
+			}
+
+			// World 3
+			if (world == 3) {
+				invisTick += 0.01;
+				if (invisTick > invisSwitch) {
+					invisTick = 0;
+					lightsOn = !lightsOn;
+					invisSwitch *= 1.1;
 				}
 			}
 
@@ -450,17 +464,21 @@ int main() {
 				eventQueue = EVENT_GAMEOVER_ANIM;
 			}
 
-			// Check for all enemies being dead
+			// Level completed
 			if (!types[0] && !types[1] && !types[2] && !types[3]) {
-				currentLevel += 3;
+				currentLevel += 6;
 				if (currentLevel > 30) {
 
 					// World completed
 					currentLevel = STARTING_LEVEL;
 					world++;
 
+					// Win
+					if (world == 4) {
+						gameMode = GAMEMODE_WIN;
+					}
+
 				}
-				printf("LEVEL: \e[31m%d\e[0m\n", currentLevel); //TEMP
 				ResetLevel();
 			}
 
@@ -527,7 +545,7 @@ int main() {
 
 			} else if (gameMode == GAMEMODE_GAME) {
 
-				DrawIconGrid(TX_sprites, animFrame, shakeVector);
+				if (lightsOn) DrawIconGrid(TX_sprites, animFrame, shakeVector);
 				DrawTextureRec(TX_sprites, SP_hud.rec, SP_hud.loc, WHITE);
 
 				// Draw target tracker
