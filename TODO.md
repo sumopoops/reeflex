@@ -61,3 +61,8 @@
 - [x] Refactor animation system to use less parameters
 - [ ] Use function pointers for animation ending action?
 - [x] Start on world 3 (Ideas?)
+- [ ] Remove score entirely? (remove time as well)
+- [ ] Unload assets on quit
+- [x] World music mixing levels
+- [x] Make sure using malloc for Sprites array
+- [ ] Short animation for switching worlds

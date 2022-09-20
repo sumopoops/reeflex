@@ -4,9 +4,11 @@
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 30
-#define STARTING_WORLD 3
+#define STARTING_LEVEL 6
+#define STARTING_WORLD 1
 #define INVIS_SWITCH_START 0.2
+
+
 
 //---------------------------------------------------------------------------------------- STRUCTS
 
@@ -28,13 +30,6 @@ typedef struct Circle {
 	int rad;
 	int speed;
 } Circle;
-
-typedef struct Timer {
-	float tick;
-	float speed;
-	int frame;
-	int maxFrames;
-} Timer;
 
 
 
@@ -69,7 +64,7 @@ int mode = 1;
 float timeLeft = 56;
 int lives = 3;
 int shakeCount = 0;
-Sprite sprites[30];
+Sprite *sprites;
 int eventQueue = EVENT_EMPTY;
 bool controlsEnabled = true;
 unsigned char gameMode = GAMEMODE_TITLE;
@@ -285,7 +280,8 @@ void ExecuteEventQueue() {
 int main() {
 
 	// Variables
-	const char windowed = 15; // Make 0 for Fullscreen
+	sprites = malloc(30*sizeof(Sprite));
+	const char windowed = 0; // Make 0 for Fullscreen
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
@@ -305,7 +301,7 @@ int main() {
 
 	// Init Window Stuff
 	float scale, playAreaX;
-	SetConfigFlags(FLAG_VSYNC_HINT);
+	//SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
 		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLX");
 		scale = (float)windowed;
@@ -327,7 +323,10 @@ int main() {
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
 	Sound SND_title_music = LoadSound("snd/title_music.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
-	Font font = LoadFont("img/font.png");
+	//Font font = LoadFont("img/font.png");
+	Music MUS_world1 = LoadMusicStream("snd/world1.ogg");
+	Music MUS_world2 = LoadMusicStream("snd/world2.ogg");
+	Music MUS_world3 = LoadMusicStream("snd/world3.ogg");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -340,6 +339,7 @@ int main() {
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_L = {{23, 35, 3, 5}, {0, 0}};
 	Sprite SP_gameover = {{780, 67, 60, 60}, {0, 0}};
+	Sprite SP_pressA = {{43, 61, 27, 5}, {16, 47}};
 
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
@@ -352,6 +352,7 @@ int main() {
     while (!WindowShouldClose()) {
 
         // UPDATE
+
 		if (gameMode == GAMEMODE_TITLE) {
 
 			if (controlsEnabled) {
@@ -370,6 +371,13 @@ int main() {
 			}
 
 		} else if (gameMode == GAMEMODE_GAME) {
+
+			// Music
+			switch (world) {
+				case 1: UpdateMusicStream(MUS_world1); break;
+				case 2: UpdateMusicStream(MUS_world2); break;
+				case 3: UpdateMusicStream(MUS_world3); break;
+			}
 
 			// Animation tick / World 2 scramble enemies
 			enemyAnimTick += enemyAnimRate;
@@ -472,6 +480,18 @@ int main() {
 					// World completed
 					currentLevel = STARTING_LEVEL;
 					world++;
+					
+					// Switch world music
+					switch (world) {
+						case 2:
+							StopMusicStream(MUS_world1);
+							PlayMusicStream(MUS_world2);
+							break;
+						case 3:
+							StopMusicStream(MUS_world2);
+							PlayMusicStream(MUS_world3);
+							break;
+					}
 
 					// Win
 					if (world == 4) {
@@ -489,6 +509,8 @@ int main() {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 
 						// Reset gameplay
+						StopMusicStream(MUS_world1);
+						PlayMusicStream(MUS_world1);
 						world = STARTING_WORLD;
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
@@ -559,9 +581,13 @@ int main() {
 			} else if (gameMode == GAMEMODE_GAMEOVER) {
 
 				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
-				DrawTextEx(font, "SCORE", (Vector2){15, 40+scoreScrollY}, font.baseSize, 1, COL_WHITE);
+				DrawTextureRec(TX_sprites, SP_pressA.rec, (Vector2){SP_pressA.loc.x, SP_pressA.loc.y+scoreScrollY}, WHITE);
+
+				/* SCORING SYSTEM
+				DrawTextEx(font, "PRESS A", (Vector2){11, 40+scoreScrollY}, font.baseSize, 1, COL_WHITE);
 				Vector2 scoreWidth = MeasureTextEx(font, TextFormat("%i", score), font.baseSize, 1);
 				DrawTextEx(font, TextFormat("%i", score), (Vector2){(int)(60 - scoreWidth.x)/2, 46+scoreScrollY}, font.baseSize, 1, COL_WHITE);
+				*/
 
 			}
 			
