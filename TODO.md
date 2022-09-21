@@ -65,4 +65,4 @@
 - [ ] Unload assets on quit
 - [x] World music mixing levels
 - [x] Make sure using malloc for Sprites array
-- [ ] Short animation for switching worlds
+- [x] Short animation for switching worlds

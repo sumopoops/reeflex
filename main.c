@@ -273,6 +273,11 @@ void ExecuteEventQueue() {
 	}
 }
 
+void WorldChangeAnim() {
+	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.16, EVENT_EMPTY);
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.16, EVENT_EMPTY);
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -281,7 +286,7 @@ int main() {
 
 	// Variables
 	sprites = malloc(30*sizeof(Sprite));
-	const char windowed = 0; // Make 0 for Fullscreen
+	const char windowed = 15; // Make 0 for Fullscreen
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
@@ -481,15 +486,17 @@ int main() {
 					currentLevel = STARTING_LEVEL;
 					world++;
 					
-					// Switch world music
+					// World music and animation
 					switch (world) {
 						case 2:
 							StopMusicStream(MUS_world1);
 							PlayMusicStream(MUS_world2);
+							WorldChangeAnim();
 							break;
 						case 3:
 							StopMusicStream(MUS_world2);
 							PlayMusicStream(MUS_world3);
+							WorldChangeAnim();
 							break;
 					}
 
@@ -512,6 +519,8 @@ int main() {
 						StopMusicStream(MUS_world1);
 						PlayMusicStream(MUS_world1);
 						world = STARTING_WORLD;
+						WorldChangeAnim();
+						lightsOn = true;
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
 						gameTime = GetTime();
