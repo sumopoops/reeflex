@@ -68,3 +68,6 @@
 - [x] Short animation for switching worlds
 - [ ] Borderless fullscreen?
 - [ ] Timer bar taller (2px instead of 1), shorten enemy count bar
+- [ ] Play level start sound, start music after animation end
+- [ ] World title stay on screen longer
+- [ ] Animation repeat count? Hold last frame?
