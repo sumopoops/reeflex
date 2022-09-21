@@ -24,7 +24,7 @@ typedef struct Sprite {
 	float animTick;
 	float animSpeed;
 	int eventOnFinish;
-	float holdLastFrame;
+	float holdLast;
 } Sprite;
 
 typedef struct Circle {
@@ -181,7 +181,7 @@ Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, floa
 	newSprite.animSpeed = animSpeed;
 	newSprite.currentFrame = 0;
 	newSprite.eventOnFinish = eventOnFinish;
-	newSprite.holdLastFrame = holdLastFrame;
+	newSprite.holdLast = holdLastFrame;
 	return newSprite;
 }
 
@@ -224,6 +224,10 @@ void UpdateSprites() {
 		sprites[i].animTick += sprites[i].animSpeed;
 		if (sprites[i].animTick > 1) {
 			sprites[i].animTick = 0;
+			if (sprites[i].currentFrame == sprites[i].frames-1 && sprites[i].holdLast > 0) {
+				sprites[i].holdLast -= 0.1;
+				continue;
+			}
 			sprites[i].currentFrame++;
 			if (sprites[i].currentFrame > sprites[i].frames-1) {
 				if (sprites[i].repeatAnim) {
@@ -278,8 +282,8 @@ void ExecuteEventQueue() {
 
 void WorldChangeAnim() {
 	controlsEnabled = false;
-	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.15, EVENT_EMPTY, 0);
-	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.15, EVENT_ENABLE_CONTROLS, 0);
+	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.15, EVENT_EMPTY, 1);
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.15, EVENT_ENABLE_CONTROLS, 1);
 	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 10, false, 0.13, EVENT_EMPTY, 0);
 }
 
