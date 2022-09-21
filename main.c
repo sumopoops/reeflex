@@ -7,6 +7,7 @@
 #define STARTING_LEVEL 6
 #define STARTING_WORLD 1
 #define INVIS_SWITCH_START 0.2
+#define SPRITE_ARRAY_SIZE 30
 
 
 
@@ -23,6 +24,7 @@ typedef struct Sprite {
 	float animTick;
 	float animSpeed;
 	int eventOnFinish;
+	float holdLastFrame;
 } Sprite;
 
 typedef struct Circle {
@@ -168,7 +170,7 @@ Sprite BlankSprite() {
 	return newBlankSprite;
 }
 
-Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, float animSpeed, int eventOnFinish) {
+Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, float animSpeed, int eventOnFinish, float holdLastFrame) {
 	Sprite newSprite;
 	newSprite.exists = true;
 	newSprite.rec = rec;
@@ -179,12 +181,13 @@ Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, floa
 	newSprite.animSpeed = animSpeed;
 	newSprite.currentFrame = 0;
 	newSprite.eventOnFinish = eventOnFinish;
+	newSprite.holdLastFrame = holdLastFrame;
 	return newSprite;
 }
 
-void InitSpriteArray(Sprite spriteArray[]) {
-	for (int i=0; i<(sizeof(*spriteArray)/sizeof(Sprite)); i++) {
-		spriteArray[i] = BlankSprite();
+void InitSpriteArray() {
+	for (int i=0; i<SPRITE_ARRAY_SIZE; i++) {
+		sprites[i] = BlankSprite();
 	}
 }
 
@@ -257,7 +260,7 @@ void ExecuteEventQueue() {
 
 		case EVENT_GAMEOVER_ANIM:
 			PlaySound(SND_gameover);
-			sprites[7] = NewSprite((Rectangle){0, 67, 60, 60}, (Vector2){0, 0}, 14, false, 0.3, EVENT_GAMEOVER);
+			sprites[7] = NewSprite((Rectangle){0, 67, 60, 60}, (Vector2){0, 0}, 14, false, 0.3, EVENT_GAMEOVER, 0);
 			gameMode = GAMEMODE_GAMEOVER;
 			score = (int)(((currentLevel * 100) +(3000*(world-1))) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
 			if (score < 0) score = 0; //TEMP
@@ -275,9 +278,9 @@ void ExecuteEventQueue() {
 
 void WorldChangeAnim() {
 	controlsEnabled = false;
-	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.15, EVENT_EMPTY);
-	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.15, EVENT_ENABLE_CONTROLS);
-	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 10, false, 0.13, EVENT_EMPTY);
+	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.15, EVENT_EMPTY, 0);
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.15, EVENT_ENABLE_CONTROLS, 0);
+	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 10, false, 0.13, EVENT_EMPTY, 0);
 }
 
 
@@ -292,8 +295,8 @@ int main() {
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
-	InitSpriteArray(sprites);
-	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, EVENT_EMPTY);
+	InitSpriteArray();
+	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, EVENT_EMPTY, 0);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -366,7 +369,7 @@ int main() {
 			if (controlsEnabled) {
 				switch (GetKeyPressed()) {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
-						InitSpriteArray(sprites);
+						InitSpriteArray();
 						gameMode = GAMEMODE_HELP;
 						StopSound(SND_title_music);
 						PlaySound(SND_click);
@@ -454,20 +457,20 @@ int main() {
 						// Remove life and play heart animation
 						switch (lives) {
 							case 2:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS);
-								sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, false, 0.2, EVENT_EMPTY);
-								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, false, 0.014, EVENT_EMPTY);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS, 0);
+								sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, false, 0.2, EVENT_EMPTY, 0);
+								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, false, 0.014, EVENT_EMPTY, 0);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY, 0);
 								break;
 							case 1:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS);
-								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, false, 0.2, EVENT_EMPTY);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS, 0);
+								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, false, 0.2, EVENT_EMPTY, 0);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY, 0);
 								break;
 							case 0:
 								scoreScrollY = 50;
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_GAMEOVER_ANIM);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, false, 0.2, EVENT_EMPTY);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_GAMEOVER_ANIM, 0);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, false, 0.2, EVENT_EMPTY, 0);
 								break;
 						}
 					}
