@@ -71,4 +71,5 @@
 - [ ] Play level start sound, start music after animation end
 - [x] World title stay on screen longer
 - [x] Animation repeat count? Hold last frame?
-- [ ] Remove extra sprite frames (copy frames) and use delay parameter instead
+- [x] Remove extra sprite frames (copy frames) and use delay parameter instead
+- [ ] Adjust world change animation numbers

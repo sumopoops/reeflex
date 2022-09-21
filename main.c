@@ -282,9 +282,9 @@ void ExecuteEventQueue() {
 
 void WorldChangeAnim() {
 	controlsEnabled = false;
-	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.15, EVENT_EMPTY, 1);
-	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.15, EVENT_ENABLE_CONTROLS, 1);
-	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 10, false, 0.13, EVENT_EMPTY, 0);
+	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 8, false, 0.15, EVENT_EMPTY, 1.3);
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 7, false, 0.15, EVENT_ENABLE_CONTROLS, 1.40);
+	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 17, false, 0.17, EVENT_EMPTY, 0); // Fade
 }
 
 
