@@ -274,8 +274,10 @@ void ExecuteEventQueue() {
 }
 
 void WorldChangeAnim() {
-	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.16, EVENT_EMPTY);
-	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.16, EVENT_EMPTY);
+	controlsEnabled = false;
+	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 16, false, 0.15, EVENT_EMPTY);
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 16, false, 0.15, EVENT_ENABLE_CONTROLS);
+	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 10, false, 0.13, EVENT_EMPTY);
 }
 
 
@@ -326,6 +328,7 @@ int main() {
 	Texture2D TX_sprites = LoadTexture("img/sprites.png");
 	Sound SND_bleep = LoadSound("snd/bleep.ogg");
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
+	Sound SND_click = LoadSound("snd/click.ogg");
 	Sound SND_title_music = LoadSound("snd/title_music.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
 	//Font font = LoadFont("img/font.png");
@@ -366,6 +369,7 @@ int main() {
 						InitSpriteArray(sprites);
 						gameMode = GAMEMODE_HELP;
 						StopSound(SND_title_music);
+						PlaySound(SND_click);
 				}
 			}
 			for (int i=0; i<circleArrLength; i++) {
@@ -515,7 +519,8 @@ int main() {
 				switch (GetKeyPressed()) {
 					case KEY_ENTER: case KEY_A: case KEY_S: case KEY_K: case KEY_L:
 
-						// Reset gameplay
+						// Reset gameplay / Start game
+						PlaySound(SND_click);
 						StopMusicStream(MUS_world1);
 						PlayMusicStream(MUS_world1);
 						world = STARTING_WORLD;
@@ -535,6 +540,7 @@ int main() {
 						currentLevel = STARTING_LEVEL;
 						gameMode = GAMEMODE_HELP;
 						StopSound(SND_gameover);
+						PlaySound(SND_click);
 						lives = 3;
 						gameTime = GetTime();
 				}

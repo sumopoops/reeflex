@@ -66,3 +66,5 @@
 - [x] World music mixing levels
 - [x] Make sure using malloc for Sprites array
 - [x] Short animation for switching worlds
+- [ ] Borderless fullscreen?
+- [ ] Timer bar taller (2px instead of 1), shorten enemy count bar
