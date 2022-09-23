@@ -23,7 +23,7 @@ typedef struct Sprite {
 	bool exists;
 	float animTick;
 	float animSpeed;
-	int eventOnFinish;
+	void (*eventOnFinish)();
 	float holdLast;
 } Sprite;
 
@@ -45,13 +45,6 @@ enum gameModes {
 	GAMEMODE_WIN
 };
 
-enum events {
-	EVENT_EMPTY,
-	EVENT_ENABLE_CONTROLS,
-	EVENT_GAMEOVER_ANIM,
-	EVENT_GAMEOVER
-};
-
 
 
 //---------------------------------------------------------------------------------------- GLOBALS
@@ -67,12 +60,11 @@ float timeLeft = 56;
 int lives = 3;
 int shakeCount = 0;
 Sprite *sprites;
-int eventQueue = EVENT_EMPTY;
+int eventQueue = false;
 bool controlsEnabled = true;
 unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
 double gameTime;
-int score;
 int world = STARTING_WORLD;
 float world2Tick = 0;
 bool lightsOn = true;
@@ -170,7 +162,7 @@ Sprite BlankSprite() {
 	return newBlankSprite;
 }
 
-Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, float animSpeed, int eventOnFinish, float holdLastFrame) {
+Sprite NewSprite(Rectangle rec, Vector2 loc, int frames, bool repeatFrames, float animSpeed, void (*eventOnFinish)(), float holdLastFrame) {
 	Sprite newSprite;
 	newSprite.exists = true;
 	newSprite.rec = rec;
@@ -233,7 +225,7 @@ void UpdateSprites() {
 				if (sprites[i].repeatAnim) {
 					sprites[i].currentFrame = 0;
 				} else {
-					if (sprites[i].eventOnFinish) eventQueue = sprites[i].eventOnFinish;
+					if (sprites[i].eventOnFinish) sprites[i].eventOnFinish();
 					sprites[i].exists = false;
 				}
 			}
@@ -254,37 +246,21 @@ void DrawSprites(Texture2D spriteSheet) {
 	}
 }
 
-void ExecuteEventQueue() {
-	switch (eventQueue) {
+void EnableControls() {
+	controlsEnabled = true;
+}
 
-		case EVENT_ENABLE_CONTROLS:
-			controlsEnabled = true;
-			eventQueue = EVENT_EMPTY;
-			break;
-
-		case EVENT_GAMEOVER_ANIM:
-			PlaySound(SND_gameover);
-			sprites[7] = NewSprite((Rectangle){0, 67, 60, 60}, (Vector2){0, 0}, 14, false, 0.3, EVENT_GAMEOVER, 0);
-			gameMode = GAMEMODE_GAMEOVER;
-			score = (int)(((currentLevel * 100) +(3000*(world-1))) - (((GetTime() - gameTime) / currentLevel) * 10)); //TEMP
-			if (score < 0) score = 0; //TEMP
-			if (currentLevel == STARTING_LEVEL && world == 1) score = 0; //TEMP
-			eventQueue = EVENT_EMPTY;
-			break;
-
-		case EVENT_GAMEOVER:
-			controlsEnabled = true;
-			eventQueue = EVENT_EMPTY;
-			break;
-			
-	}
+void Gameover() {
+	PlaySound(SND_gameover);
+	sprites[7] = NewSprite((Rectangle){0, 67, 60, 60}, (Vector2){0, 0}, 14, false, 0.3, EnableControls, 0);
+	gameMode = GAMEMODE_GAMEOVER;
 }
 
 void WorldChangeAnim() {
 	controlsEnabled = false;
-	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 8, false, 0.15, EVENT_EMPTY, 1.3);
-	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 21}, 7, false, 0.15, EVENT_ENABLE_CONTROLS, 1.40);
-	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 17, false, 0.16, EVENT_EMPTY, 0); // Fade
+	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 8, false, 0.15, false, 1.3);
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 21}, 7, false, 0.15, EnableControls, 1.40);
+	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 17, false, 0.16, false, 0); // Fade
 }
 
 
@@ -300,13 +276,13 @@ int main() {
 	float enemyAnimTick = 0;
 	int animFrame = 0;
 	InitSpriteArray();
-	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, EVENT_EMPTY, 0);
+	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, false, 0);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
 	int circleArrLength = sizeof(circles)/sizeof(Circle);
 	for (int i=0; i<circleArrLength; i++) circles[i] = NewCircle();
-	float scoreScrollY = 40;
+	float pressA_scrollY = 40;
 
 	// Shake shake
 	Vector2 shakeVector = {0, 0};
@@ -461,20 +437,20 @@ int main() {
 						// Remove life and play heart animation
 						switch (lives) {
 							case 2:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS, 0);
-								sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, false, 0.2, EVENT_EMPTY, 0);
-								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, false, 0.014, EVENT_EMPTY, 0);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY, 0);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EnableControls, 0);
+								sprites[1] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){10, 19}, 8, false, 0.2, false, 0);
+								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 1, false, 0.014, false, 0);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, false, 0);
 								break;
 							case 1:
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_ENABLE_CONTROLS, 0);
-								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, false, 0.2, EVENT_EMPTY, 0);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, EVENT_EMPTY, 0);
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EnableControls, 0);
+								sprites[2] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){23, 19}, 8, false, 0.2, false, 0);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 1, false, 0.014, false, 0);
 								break;
 							case 0:
-								scoreScrollY = 50;
-								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, EVENT_GAMEOVER_ANIM, 0);
-								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, false, 0.2, EVENT_EMPTY, 0);
+								pressA_scrollY = 50;
+								sprites[0] = NewSprite((Rectangle){88, 13, 41, 14}, (Vector2){9, 18}, 1, false, 0.014, Gameover, 0);
+								sprites[3] = NewSprite((Rectangle){80, 0, 13, 12}, (Vector2){36, 19}, 8, false, 0.2, false, 0);
 								break;
 						}
 					}
@@ -484,8 +460,8 @@ int main() {
 			// Timer runs out
 			if (controlsEnabled) timeLeft -= 0.06;
 			if (timeLeft <= 0) {
-				scoreScrollY = 50;
-				eventQueue = EVENT_GAMEOVER_ANIM;
+				pressA_scrollY = 50;
+				Gameover();
 			}
 
 			// Level completed
@@ -553,12 +529,11 @@ int main() {
 				}
 			}
 
-			if (scoreScrollY > 0) scoreScrollY -= 0.4;
+			if (pressA_scrollY > 0) pressA_scrollY -= 0.4;
 
 		}
 
 		// Always run
-		ExecuteEventQueue();
 		UpdateSprites(sprites);
 
 		// TEXTURE DRAW
@@ -603,13 +578,7 @@ int main() {
 			} else if (gameMode == GAMEMODE_GAMEOVER) {
 
 				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
-				DrawTextureRec(TX_sprites, SP_pressA.rec, (Vector2){SP_pressA.loc.x, SP_pressA.loc.y+scoreScrollY}, WHITE);
-
-				/* SCORING SYSTEM
-				DrawTextEx(font, "PRESS A", (Vector2){11, 40+scoreScrollY}, font.baseSize, 1, COL_WHITE);
-				Vector2 scoreWidth = MeasureTextEx(font, TextFormat("%i", score), font.baseSize, 1);
-				DrawTextEx(font, TextFormat("%i", score), (Vector2){(int)(60 - scoreWidth.x)/2, 46+scoreScrollY}, font.baseSize, 1, COL_WHITE);
-				*/
+				DrawTextureRec(TX_sprites, SP_pressA.rec, (Vector2){SP_pressA.loc.x, SP_pressA.loc.y+pressA_scrollY}, WHITE);
 
 			}
 			

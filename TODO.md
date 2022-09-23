@@ -21,18 +21,18 @@
 - [x] UpdateSprites needs to delete animation if it's not repeating
 - [x] Sprites no repeat + no anim properties full working
 - [ ] Move animations into Sprite pool
-- [ ] Array length variables
+- [x] Array length variables
 - [ ] Load spritesheet inline? Or asset pack
 - [x] Better sounds
 - [ ] Refactor code, less asset creations
 - [x] Show level reached on gameover screen
 - [x] Gameover death animation
 - [x] Game mode change transition effects
-- [ ] Create struct to handle basic timers?
+- [x] Create struct to handle basic timers?
 - [x] Create world system and move to next level after screen cleared
 - [ ] Use release.bat for final build (Add butler support to script?)
 - [x] Disable controls during life loss animation
-- [ ] Animation for enemy being killed?
+- [x] Animation for enemy being killed?
 - [x] Black bar under life loss animations
 - [x] Show last heart animation before game over screen pops up
 - [x] Create event queue system
@@ -42,13 +42,13 @@
 - [x] DrawSprites/Sprite allow passing Texture2D, useful for big animations
 - [x] Gameover wipe flicker
 - [x] Show time played on gameover and/or show score that is calculated from level+time
-- [ ] Bonus score for beating all 3 worlds
+- [x] Bonus score for beating all 3 worlds
 - [ ] Ending animation for beating game
-- [ ] Refine scoring
+- [x] Refine scoring
 - [x] Fix alignment of score
 - [x] Score slide in from bottom?
 - [x] Scramble enemy positions function, use in world 2
-- [ ] Intro/title screen song
+- [ ] Intro/title screen song (more intro FX?)
 - [ ] Create intro game mode (logo?)
 - [x] Test screen switching bug on TV
 - [x] Fix enemies scrambling off screen
@@ -57,9 +57,9 @@
 - [x] Make sure scrambling doesn't delete enemy count/type
 - [x] Unpause level timer after debugging
 - [x] Fix disappearing enemy glitch
-- [ ] Change explosion animation (Make smaller?)
+- [x] Change explosion animation (Make smaller?)
 - [x] Refactor animation system to use less parameters
-- [ ] Use function pointers for animation ending action?
+- [x] Use function pointers for animation ending action?
 - [x] Start on world 3 (Ideas?)
 - [ ] Remove score entirely? (remove time as well)
 - [ ] Unload assets on quit
@@ -67,10 +67,11 @@
 - [x] Make sure using malloc for Sprites array
 - [x] Short animation for switching worlds
 - [ ] Borderless fullscreen?
-- [ ] Timer bar taller (2px instead of 1), shorten enemy count bar
+- [x] Timer bar taller (2px instead of 1), shorten enemy count bar
 - [ ] Play level start sound, start music after animation end
 - [x] World title stay on screen longer
 - [x] Animation repeat count? Hold last frame?
 - [x] Remove extra sprite frames (copy frames) and use delay parameter instead
-- [ ] Adjust world change animation numbers
+- [x] Adjust world change animation numbers
 - [ ] Enemy kill destroys random enemy instead of sequential
+- [ ] Remove dead code
