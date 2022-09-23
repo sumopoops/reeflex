@@ -73,3 +73,4 @@
 - [x] Animation repeat count? Hold last frame?
 - [x] Remove extra sprite frames (copy frames) and use delay parameter instead
 - [ ] Adjust world change animation numbers
+- [ ] Enemy kill destroys random enemy instead of sequential

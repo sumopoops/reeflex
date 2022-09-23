@@ -283,8 +283,8 @@ void ExecuteEventQueue() {
 void WorldChangeAnim() {
 	controlsEnabled = false;
 	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 8, false, 0.15, EVENT_EMPTY, 1.3);
-	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 22}, 7, false, 0.15, EVENT_ENABLE_CONTROLS, 1.40);
-	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 17, false, 0.17, EVENT_EMPTY, 0); // Fade
+	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 21}, 7, false, 0.15, EVENT_ENABLE_CONTROLS, 1.40);
+	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 17, false, 0.16, EVENT_EMPTY, 0); // Fade
 }
 
 
@@ -347,8 +347,8 @@ int main() {
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
 	Sprite SP_logo = {{0, 40, 41, 27}, {9, 10}};
 	Sprite SP_hud = {{0, 20, 60, 10}, {0, 50}};
-	Sprite SP_targetRem = {{0, 30, 1, 2}, {0, 0}};
-	Sprite SP_timeDot = {{1, 30, 1, 1}, {0, 0}};
+	Sprite SP_targetRem = {{0, 30, 1, 1}, {0, 0}};
+	Sprite SP_timeDot = {{1, 30, 1, 2}, {0, 0}};
 	Sprite SP_letter_A = {{3, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_S = {{7, 35, 3, 5}, {0, 0}};
 	Sprite SP_letter_K = {{19, 35, 3, 5}, {0, 0}};
@@ -598,7 +598,7 @@ int main() {
 
 				// Draw time bar
 				for (int i=0; i<timeLeft; i++)
-				DrawTextureRec(TX_sprites, SP_timeDot.rec, (Vector2){2+i, 57}, WHITE);
+				DrawTextureRec(TX_sprites, SP_timeDot.rec, (Vector2){2+i, 56}, WHITE);
 
 			} else if (gameMode == GAMEMODE_GAMEOVER) {
 
