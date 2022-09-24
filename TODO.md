@@ -80,3 +80,5 @@
 - [ ] Record World 2 to see if any enemies are changing randomly
 - [ ] Test launch speed on laptop VS desktop, try older commit
 - [ ] Silent pause before win track starts playin
+- [ ] Loading screen before title to load assets (Progress bar?)
+- [ ] Make sure press A animation is moving by pixels

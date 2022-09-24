@@ -39,6 +39,7 @@ typedef struct Circle {
 //---------------------------------------------------------------------------------------- ENUMS
 
 enum gameModes {
+	GAMEMODE_LOADING,
 	GAMEMODE_TITLE,
 	GAMEMODE_GAME,
 	GAMEMODE_HELP,
@@ -65,7 +66,6 @@ int eventQueue = false;
 bool controlsEnabled = true;
 unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
-double gameTime;
 int world = STARTING_WORLD;
 float world2Tick = 0;
 bool lightsOn = true;
@@ -272,7 +272,7 @@ int main() {
 
 	// Variables
 	sprites = malloc(30*sizeof(Sprite));
-	const char windowed = PIXEL_SIZE; // Make 0 for Fullscreen
+	const char windowed = PIXEL_SIZE;
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
@@ -316,7 +316,6 @@ int main() {
 	Sound SND_title_music = LoadSound("snd/title_music.ogg");
 	Sound SND_win = LoadSound("snd/win.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
-	//Font font = LoadFont("img/font.png");
 	Music MUS_world1 = LoadMusicStream("snd/world1.ogg");
 	Music MUS_world2 = LoadMusicStream("snd/world2.ogg");
 	Music MUS_world3 = LoadMusicStream("snd/world3.ogg");
@@ -511,7 +510,6 @@ int main() {
 						lightsOn = true;
 						ResetLevel();
 						gameMode = GAMEMODE_GAME;
-						gameTime = GetTime();
 				}
 			}
 
@@ -525,7 +523,6 @@ int main() {
 						StopSound(SND_gameover);
 						PlaySound(SND_click);
 						lives = 3;
-						gameTime = GetTime();
 				}
 			}
 
