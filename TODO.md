@@ -77,3 +77,6 @@
 - [ ] Remove dead code
 - [ ] Final track levels + intro song lower slightly
 - [ ] Final track fix transition into ending
+- [ ] Record World 2 to see if any enemies are changing randomly
+- [ ] Test launch speed on laptop VS desktop, try older commit
+- [ ] Silent pause before win track starts playin

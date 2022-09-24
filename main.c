@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#define PIXEL_SIZE 15
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
@@ -271,7 +272,7 @@ int main() {
 
 	// Variables
 	sprites = malloc(30*sizeof(Sprite));
-	const char windowed = 15; // Make 0 for Fullscreen
+	const char windowed = PIXEL_SIZE; // Make 0 for Fullscreen
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
@@ -313,6 +314,7 @@ int main() {
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
 	Sound SND_click = LoadSound("snd/click.ogg");
 	Sound SND_title_music = LoadSound("snd/title_music.ogg");
+	Sound SND_win = LoadSound("snd/win.ogg");
 	SND_gameover = LoadSound("snd/gameover.ogg");
 	//Font font = LoadFont("img/font.png");
 	Music MUS_world1 = LoadMusicStream("snd/world1.ogg");
@@ -332,11 +334,9 @@ int main() {
 	Sprite SP_gameover = {{780, 67, 60, 60}, {0, 0}};
 	Sprite SP_pressA = {{43, 61, 27, 5}, {16, 47}};
 
+	// Init
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
-	//SetWindowPosition(500, 300); //TEMP
-
-	// Init
 	ResetLevel();
 	PlaySound(SND_title_music);
 
@@ -485,11 +485,11 @@ int main() {
 							PlayMusicStream(MUS_world3);
 							WorldChangeAnim();
 							break;
-					}
-
-					// Win
-					if (world == 4) {
-						gameMode = GAMEMODE_WIN;
+						case 4:
+							StopMusicStream(MUS_world3);
+							PlaySound(SND_win);
+							gameMode = GAMEMODE_WIN;
+							break;
 					}
 
 				}
