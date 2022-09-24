@@ -75,3 +75,5 @@
 - [x] Adjust world change animation numbers
 - [ ] Enemy kill destroys random enemy instead of sequential
 - [ ] Remove dead code
+- [ ] Final track levels + intro song lower slightly
+- [ ] Final track fix transition into ending
