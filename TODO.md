@@ -48,8 +48,8 @@
 - [x] Fix alignment of score
 - [x] Score slide in from bottom?
 - [x] Scramble enemy positions function, use in world 2
-- [ ] Intro/title screen song (more intro FX?)
-- [ ] Create intro game mode (logo?)
+- [x] Intro/title screen song (more intro FX?)
+- [x] Create intro game mode (logo?)
 - [x] Test screen switching bug on TV
 - [x] Fix enemies scrambling off screen
 - [x] Slower scrable speed
@@ -61,14 +61,14 @@
 - [x] Refactor animation system to use less parameters
 - [x] Use function pointers for animation ending action?
 - [x] Start on world 3 (Ideas?)
-- [ ] Remove score entirely? (remove time as well)
+- [x] Remove score entirely? (remove time as well)
 - [ ] Unload assets on quit
 - [x] World music mixing levels
 - [x] Make sure using malloc for Sprites array
 - [x] Short animation for switching worlds
 - [ ] Borderless fullscreen?
 - [x] Timer bar taller (2px instead of 1), shorten enemy count bar
-- [ ] Play level start sound, start music after animation end
+- [x] Play level start sound, start music after animation end
 - [x] World title stay on screen longer
 - [x] Animation repeat count? Hold last frame?
 - [x] Remove extra sprite frames (copy frames) and use delay parameter instead
@@ -76,9 +76,9 @@
 - [ ] Enemy kill destroys random enemy instead of sequential
 - [ ] Remove dead code
 - [ ] Final track levels + intro song lower slightly
-- [ ] Final track fix transition into ending
-- [ ] Record World 2 to see if any enemies are changing randomly
-- [ ] Test launch speed on laptop VS desktop, try older commit
-- [ ] Silent pause before win track starts playin
-- [ ] Loading screen before title to load assets (Progress bar?)
-- [ ] Make sure press A animation is moving by pixels
+- [x] Final track fix transition into ending
+- [x] Record World 2 to see if any enemies are changing randomly
+- [x] Test launch speed on laptop VS desktop, try older commit
+- [x] Silent pause before win track starts playin
+- [x] Loading screen before title to load assets (Progress bar?)
+- [x] Make sure press A animation is moving by pixels

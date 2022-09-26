@@ -1,12 +1,12 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define PIXEL_SIZE 15
+#define PIXEL_SIZE 0
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 6
-#define STARTING_WORLD 1
+#define STARTING_LEVEL 30
+#define STARTING_WORLD 3
 #define INVIS_SWITCH_START 0.2
 #define SPRITE_ARRAY_SIZE 30
 
@@ -488,6 +488,7 @@ int main() {
 							StopMusicStream(MUS_world3);
 							PlaySound(SND_win);
 							gameMode = GAMEMODE_WIN;
+							sprites[20] = NewSprite((Rectangle){432, 0, 60, 60}, (Vector2){0, 0}, 8, false, 0.09, false, 0);
 							break;
 					}
 
