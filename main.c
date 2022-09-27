@@ -1,12 +1,12 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define PIXEL_SIZE 0
+#define PIXEL_SIZE 15
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 30
-#define STARTING_WORLD 3
+#define STARTING_LEVEL 6
+#define STARTING_WORLD 1
 #define INVIS_SWITCH_START 0.2
 #define SPRITE_ARRAY_SIZE 30
 
@@ -33,6 +33,13 @@ typedef struct Circle {
 	int rad;
 	int speed;
 } Circle;
+
+typedef struct Triangle {
+	Vector2 a;
+	Vector2 b;
+	Vector2 c;
+	bool exists;
+} Triangle;
 
 
 
@@ -64,14 +71,15 @@ int shakeCount = 0;
 Sprite *sprites;
 int eventQueue = false;
 bool controlsEnabled = true;
-unsigned char gameMode = GAMEMODE_TITLE;
+bool winAnimPlaying = true; //TEMP Change to false
+unsigned char gameMode = GAMEMODE_WIN;
 Sound SND_gameover;
 int world = STARTING_WORLD;
 float world2Tick = 0;
 bool lightsOn = true;
 float invisTick = 0;
 float invisSwitch = INVIS_SWITCH_START;
-bool winAnimPlaying = false;
+Triangle *triangles;
 
 
 
@@ -277,12 +285,15 @@ int main() {
 
 	// Variables
 	sprites = malloc(30*sizeof(Sprite));
+	triangles = malloc(30*sizeof(Triangle));
+	for (int i=1; i<30; i++) triangles[i] = (Triangle){0}; // Zero triangles
+	triangles[0] = (Triangle){(Vector2){30, 5}, (Vector2){50, 60}, (Vector2){5, 55}}; // Temp
 	const char windowed = PIXEL_SIZE;
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
 	InitSpriteArray();
-	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, false, 0);
+	//sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, false, 0); //TEMP reactivate
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -583,6 +594,10 @@ int main() {
 				DrawTextureRec(TX_sprites, SP_gameover.rec, SP_gameover.loc, WHITE);
 				DrawTextureRec(TX_sprites, SP_pressA.rec, (Vector2){SP_pressA.loc.x, SP_pressA.loc.y+pressA_scrollY}, WHITE);
 
+			} else if (gameMode == GAMEMODE_WIN) {
+				if (winAnimPlaying) {
+					DrawTriangleLines(triangles[0].a, triangles[0].b, triangles[0].c, COL_WHITE);
+				}
 			}
 			
 			// Always draw
@@ -610,7 +625,7 @@ int main() {
 	UnloadMusicStream(MUS_world3);
 	UnloadRenderTexture(target);
 
-	ToggleFullscreen();
+	if (IsWindowFullscreen()) ToggleFullscreen();
     CloseWindow();
 
     return 0;
