@@ -71,6 +71,7 @@ float world2Tick = 0;
 bool lightsOn = true;
 float invisTick = 0;
 float invisSwitch = INVIS_SWITCH_START;
+bool winAnimPlaying = false;
 
 
 
@@ -262,6 +263,10 @@ void WorldChangeAnim() {
 	sprites[10] = NewSprite((Rectangle){176, 0, 31, 16}, (Vector2){14, 6}, 8, false, 0.15, false, 1.3);
 	sprites[11] = NewSprite((Rectangle){270, 3+(16*world), 16, 16}, (Vector2){21, 21}, 7, false, 0.15, EnableControls, 1.40);
 	sprites[9] = NewSprite((Rectangle){0, 127, 60, 51}, (Vector2){0, 0}, 17, false, 0.16, false, 0); // Fade
+}
+
+void GameEnding() {
+	winAnimPlaying = true;
 }
 
 
@@ -488,7 +493,7 @@ int main() {
 							StopMusicStream(MUS_world3);
 							PlaySound(SND_win);
 							gameMode = GAMEMODE_WIN;
-							sprites[20] = NewSprite((Rectangle){432, 0, 60, 60}, (Vector2){0, 0}, 8, false, 0.09, false, 0);
+							sprites[20] = NewSprite((Rectangle){432, 0, 60, 60}, (Vector2){0, 0}, 8, false, 0.09, GameEnding, 0);
 							break;
 					}
 
@@ -592,6 +597,20 @@ int main() {
         EndDrawing();
     }
 
+	// Unload Assets
+	UnloadTexture(TX_sprites);
+	UnloadSound(SND_bleep);
+	UnloadSound(SND_looseLife);
+	UnloadSound(SND_click);
+	UnloadSound(SND_title_music);
+	UnloadSound(SND_win);
+	UnloadSound(SND_gameover);
+	UnloadMusicStream(MUS_world1);
+	UnloadMusicStream(MUS_world2);
+	UnloadMusicStream(MUS_world3);
+	UnloadRenderTexture(target);
+
+	ToggleFullscreen();
     CloseWindow();
 
     return 0;

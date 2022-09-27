@@ -82,3 +82,5 @@
 - [x] Silent pause before win track starts playin
 - [x] Loading screen before title to load assets (Progress bar?)
 - [x] Make sure press A animation is moving by pixels
+- [ ] Title song trail end abruptly
+- [ ] Monitor fullscreen switch and see if its fixed on closing game
