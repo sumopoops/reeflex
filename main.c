@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define PIXEL_SIZE 15
+#define PIXEL_SIZE 0
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
@@ -298,12 +298,12 @@ void UpdateTriangles() {
 		triangles[i].c.y += triangles[i].c_velocity.y;
 
 		// Check bounds
-		if (triangles[i].a.x < 0 || triangles[i].a.x > 60) triangles[i].a_velocity.x *= -1;
-		if (triangles[i].a.y < 0 || triangles[i].a.y > 60) triangles[i].a_velocity.y *= -1;
-		if (triangles[i].b.x < 0 || triangles[i].b.x > 60) triangles[i].b_velocity.x *= -1;
-		if (triangles[i].b.y < 0 || triangles[i].b.y > 60) triangles[i].b_velocity.y *= -1;
-		if (triangles[i].c.x < 0 || triangles[i].c.x > 60) triangles[i].c_velocity.x *= -1;
-		if (triangles[i].c.y < 0 || triangles[i].c.y > 60) triangles[i].c_velocity.y *= -1;
+		if (triangles[i].a.x < -10 || triangles[i].a.x > 70) triangles[i].a_velocity.x *= -1;
+		if (triangles[i].a.y < -10 || triangles[i].a.y > 70) triangles[i].a_velocity.y *= -1;
+		if (triangles[i].b.x < -10 || triangles[i].b.x > 70) triangles[i].b_velocity.x *= -1;
+		if (triangles[i].b.y < -10 || triangles[i].b.y > 70) triangles[i].b_velocity.y *= -1;
+		if (triangles[i].c.x < -10 || triangles[i].c.x > 70) triangles[i].c_velocity.x *= -1;
+		if (triangles[i].c.y < -10 || triangles[i].c.y > 70) triangles[i].c_velocity.y *= -1;
 	}
 }
 
@@ -317,7 +317,7 @@ int main() {
 	sprites = malloc(30*sizeof(Sprite));
 	triangles = malloc(30*sizeof(Triangle));
 	for (int i=1; i<30; i++) triangles[i] = (Triangle){0}; // Zero triangles
-	for (int i=0; i<3; i++) {
+	for (int i=0; i<4; i++) {
 		triangles[i] = (Triangle){
 			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
 			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
