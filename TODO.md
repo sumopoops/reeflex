@@ -85,3 +85,4 @@
 - [ ] Title song trail end abruptly
 - [ ] Monitor fullscreen switch and see if its fixed on closing game
 - [ ] Change winAnimPlaying to false, set Press A anim to play again
+- [ ] Random seed

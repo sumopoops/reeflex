@@ -38,6 +38,9 @@ typedef struct Triangle {
 	Vector2 a;
 	Vector2 b;
 	Vector2 c;
+	Vector2 a_velocity;
+	Vector2 b_velocity;
+	Vector2 c_velocity;
 	bool exists;
 } Triangle;
 
@@ -256,6 +259,13 @@ void DrawSprites(Texture2D spriteSheet) {
 	}
 }
 
+void DrawTriangles() {
+	for (int i=0; i<30; i++) {
+		if (!triangles[i].exists) continue;
+		DrawTriangleLines(triangles[i].a, triangles[i].b, triangles[i].c, (Color){238, 238, 238, 255});
+	}
+}
+
 void EnableControls() {
 	controlsEnabled = true;
 }
@@ -277,6 +287,26 @@ void GameEnding() {
 	winAnimPlaying = true;
 }
 
+void UpdateTriangles() {
+	for (int i=0; i<30; i++) {
+		if (!triangles[i].exists) continue;
+		triangles[i].a.x += triangles[i].a_velocity.x;
+		triangles[i].a.y += triangles[i].a_velocity.y;
+		triangles[i].b.x += triangles[i].b_velocity.x;
+		triangles[i].b.y += triangles[i].b_velocity.y;
+		triangles[i].c.x += triangles[i].c_velocity.x;
+		triangles[i].c.y += triangles[i].c_velocity.y;
+
+		// Check bounds
+		if (triangles[i].a.x < 0 || triangles[i].a.x > 60) triangles[i].a_velocity.x *= -1;
+		if (triangles[i].a.y < 0 || triangles[i].a.y > 60) triangles[i].a_velocity.y *= -1;
+		if (triangles[i].b.x < 0 || triangles[i].b.x > 60) triangles[i].b_velocity.x *= -1;
+		if (triangles[i].b.y < 0 || triangles[i].b.y > 60) triangles[i].b_velocity.y *= -1;
+		if (triangles[i].c.x < 0 || triangles[i].c.x > 60) triangles[i].c_velocity.x *= -1;
+		if (triangles[i].c.y < 0 || triangles[i].c.y > 60) triangles[i].c_velocity.y *= -1;
+	}
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -287,7 +317,17 @@ int main() {
 	sprites = malloc(30*sizeof(Sprite));
 	triangles = malloc(30*sizeof(Triangle));
 	for (int i=1; i<30; i++) triangles[i] = (Triangle){0}; // Zero triangles
-	triangles[0] = (Triangle){(Vector2){30, 5}, (Vector2){50, 60}, (Vector2){5, 55}}; // Temp
+	for (int i=0; i<3; i++) {
+		triangles[i] = (Triangle){
+			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
+			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
+			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
+			(Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)},
+			(Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)},
+			(Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)},
+			true
+		}; // Temp
+	}
 	const char windowed = PIXEL_SIZE;
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
@@ -545,6 +585,10 @@ int main() {
 
 			if (pressA_scrollY > 0) pressA_scrollY -= 0.4;
 
+		} else if (gameMode == GAMEMODE_WIN) {
+
+			UpdateTriangles();
+
 		}
 
 		// Always run
@@ -596,7 +640,7 @@ int main() {
 
 			} else if (gameMode == GAMEMODE_WIN) {
 				if (winAnimPlaying) {
-					DrawTriangleLines(triangles[0].a, triangles[0].b, triangles[0].c, COL_WHITE);
+					DrawTriangles();
 				}
 			}
 			
