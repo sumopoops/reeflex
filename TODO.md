@@ -88,3 +88,5 @@
 - [x] Random seed
 - [ ] Make last hit for game not play, ending attack sound louder?
 - [ ] Delay ending music slightly, or use sprite timing
+- [ ] Final attack ogg
+- [ ] Remove intro tail to ending music

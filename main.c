@@ -5,8 +5,8 @@
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 6
-#define STARTING_WORLD 1
+#define STARTING_LEVEL 30
+#define STARTING_WORLD 3
 #define INVIS_SWITCH_START 0.2
 #define SPRITE_ARRAY_SIZE 30
 
@@ -77,6 +77,7 @@ bool controlsEnabled = true;
 bool winAnimPlaying = false;
 unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
+Sound SND_win;
 int world = STARTING_WORLD;
 float world2Tick = 0;
 bool lightsOn = true;
@@ -284,6 +285,7 @@ void WorldChangeAnim() {
 }
 
 void GameEnding() {
+	PlaySound(SND_win);
 	controlsEnabled = false;
 	winAnimPlaying = true;
 	sprites[0] = NewSprite((Rectangle){0, 178, 60, 30}, (Vector2){0, 15}, 6, true, 0.2, false, 0);
@@ -384,11 +386,12 @@ int main() {
 	Sound SND_looseLife = LoadSound("snd/lifeloss.ogg");
 	Sound SND_click = LoadSound("snd/click.ogg");
 	Sound SND_title_music = LoadSound("snd/title_music.ogg");
-	Sound SND_win = LoadSound("snd/win.ogg");
-	SND_gameover = LoadSound("snd/gameover.ogg");
+	Sound SND_final_attack = LoadSound("snd/final_attack.ogg");
 	Music MUS_world1 = LoadMusicStream("snd/world1.ogg");
 	Music MUS_world2 = LoadMusicStream("snd/world2.ogg");
 	Music MUS_world3 = LoadMusicStream("snd/world3.ogg");
+	SND_gameover = LoadSound("snd/gameover.ogg");
+	SND_win = LoadSound("snd/win.ogg");
 
 	// Sprites
 	Sprite SP_types = {{0, 0, 40, 10}, {10, 18}};
@@ -557,7 +560,7 @@ int main() {
 							break;
 						case 4:
 							StopMusicStream(MUS_world3);
-							PlaySound(SND_win);
+							PlaySound(SND_final_attack);
 							gameMode = GAMEMODE_WIN;
 							sprites[20] = NewSprite((Rectangle){432, 0, 60, 60}, (Vector2){0, 0}, 8, false, 0.09, GameEnding, 0);
 							break;
@@ -678,6 +681,7 @@ int main() {
 	UnloadSound(SND_click);
 	UnloadSound(SND_title_music);
 	UnloadSound(SND_win);
+	UnloadSound(SND_final_attack);
 	UnloadSound(SND_gameover);
 	UnloadMusicStream(MUS_world1);
 	UnloadMusicStream(MUS_world2);
