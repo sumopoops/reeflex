@@ -87,6 +87,7 @@
 - [x] Change winAnimPlaying to false, set Press A anim to play again, play intro song again
 - [x] Random seed
 - [ ] Make last hit for game not play, ending attack sound louder?
-- [ ] Delay ending music slightly, or use sprite timing
-- [ ] Final attack ogg
-- [ ] Remove intro tail to ending music
+- [x] Delay ending music slightly, or use sprite timing
+- [x] Final attack ogg
+- [x] Remove intro tail to ending music
+- [ ] Fix final attack animation and extend by 2 frames

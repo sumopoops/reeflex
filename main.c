@@ -5,8 +5,8 @@
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
-#define STARTING_LEVEL 30
-#define STARTING_WORLD 3
+#define STARTING_LEVEL 6
+#define STARTING_WORLD 1
 #define INVIS_SWITCH_START 0.2
 #define SPRITE_ARRAY_SIZE 30
 
@@ -313,15 +313,7 @@ void UpdateTriangles() {
 
 void PopulateTriangles() {
 	for (int i=1; i<30; i++) triangles[i] = (Triangle){0}; // Zero triangles
-	triangles[0] = (Triangle){
-		(Vector2){20, 0},
-		(Vector2){0, 20},
-		(Vector2){20, 45},
-		(Vector2){0.2, 0.5},
-		(Vector2){0.5, 0.3},
-		(Vector2){0.1, 0.5},
-		true
-	};
+	triangles[0] = (Triangle){(Vector2){20, 0}, (Vector2){0, 20}, (Vector2){20, 45}, (Vector2){0.2, 0.5}, (Vector2){0.5, 0.3}, (Vector2){0.1, 0.5}, true};
 	for (int i=1; i<9; i++) {
 		triangles[i] = (Triangle){
 			(Vector2){triangles[0].a.x+3*i, triangles[0].a.y+3*i},
