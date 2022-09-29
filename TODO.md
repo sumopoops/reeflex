@@ -84,5 +84,7 @@
 - [x] Make sure press A animation is moving by pixels
 - [ ] Title song trail end abruptly
 - [x] Monitor fullscreen switch and see if its fixed on closing game
-- [ ] Change winAnimPlaying to false, set Press A anim to play again, play intro song again
+- [x] Change winAnimPlaying to false, set Press A anim to play again, play intro song again
 - [x] Random seed
+- [ ] Make last hit for game not play, ending attack sound louder?
+- [ ] Delay ending music slightly, or use sprite timing

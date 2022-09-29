@@ -74,8 +74,8 @@ int shakeCount = 0;
 Sprite *sprites;
 int eventQueue = false;
 bool controlsEnabled = true;
-bool winAnimPlaying = true; //TEMP Change to false
-unsigned char gameMode = GAMEMODE_WIN;
+bool winAnimPlaying = false;
+unsigned char gameMode = GAMEMODE_TITLE;
 Sound SND_gameover;
 int world = STARTING_WORLD;
 float world2Tick = 0;
@@ -284,7 +284,9 @@ void WorldChangeAnim() {
 }
 
 void GameEnding() {
+	controlsEnabled = false;
 	winAnimPlaying = true;
+	sprites[0] = NewSprite((Rectangle){0, 178, 60, 30}, (Vector2){0, 15}, 6, true, 0.2, false, 0);
 }
 
 void UpdateTriangles() {
@@ -307,6 +309,30 @@ void UpdateTriangles() {
 	}
 }
 
+void PopulateTriangles() {
+	for (int i=1; i<30; i++) triangles[i] = (Triangle){0}; // Zero triangles
+	triangles[0] = (Triangle){
+		(Vector2){20, 0},
+		(Vector2){0, 20},
+		(Vector2){20, 45},
+		(Vector2){0.2, 0.5},
+		(Vector2){0.5, 0.3},
+		(Vector2){0.1, 0.5},
+		true
+	};
+	for (int i=1; i<9; i++) {
+		triangles[i] = (Triangle){
+			(Vector2){triangles[0].a.x+3*i, triangles[0].a.y+3*i},
+			(Vector2){triangles[0].b.x+3*i, triangles[0].b.y+3*i},
+			(Vector2){triangles[0].c.x+3*i, triangles[0].c.y+3*i},
+			(Vector2){triangles[0].a_velocity.x, triangles[0].a_velocity.y},
+			(Vector2){triangles[0].b_velocity.x, triangles[0].b_velocity.y},
+			(Vector2){triangles[0].c_velocity.x, triangles[0].c_velocity.y},
+			true
+		};
+	}
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -316,24 +342,12 @@ int main() {
 	// Variables
 	sprites = malloc(30*sizeof(Sprite));
 	triangles = malloc(30*sizeof(Triangle));
-	for (int i=1; i<30; i++) triangles[i] = (Triangle){0}; // Zero triangles
-	for (int i=0; i<4; i++) {
-		triangles[i] = (Triangle){
-			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
-			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
-			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
-			(Vector2){GetRandomValue(-10, 10)*0.1, GetRandomValue(-10, 10)*0.1},
-			(Vector2){GetRandomValue(-10, 10)*0.1, GetRandomValue(-10, 10)*0.1},
-			(Vector2){GetRandomValue(-10, 10)*0.1, GetRandomValue(-10, 10)*0.1},
-			true
-		}; // Temp
-	}
 	const char windowed = PIXEL_SIZE;
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
 	InitSpriteArray();
-	//sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, false, 0); //TEMP reactivate
+	sprites[0] = NewSprite((Rectangle){43, 61, 27, 5}, (Vector2){16, 47}, 8, true, 0.18, false, 0);
 	const Color COL_WHITE = {238, 238, 238, 255};
 	const Color COL_BLACK = {33, 33, 33, 255};
 	Circle circles[10] = {0};
@@ -348,7 +362,7 @@ int main() {
 
 	// Init Window Stuff
 	float scale, playAreaX;
-	//SetConfigFlags(FLAG_VSYNC_HINT);
+	SetConfigFlags(FLAG_VSYNC_HINT);
 	if (windowed) {
 		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLX");
 		scale = (float)windowed;
@@ -393,6 +407,7 @@ int main() {
 	RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
     SetTargetFPS(60);
 	ResetLevel();
+	PopulateTriangles();
 	PlaySound(SND_title_music);
 
     while (!WindowShouldClose()) {
