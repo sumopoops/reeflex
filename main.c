@@ -322,9 +322,9 @@ int main() {
 			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
 			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
 			(Vector2){GetRandomValue(0, 60), GetRandomValue(0, 60)},
-			(Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)},
-			(Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)},
-			(Vector2){GetRandomValue(-1, 1), GetRandomValue(-1, 1)},
+			(Vector2){GetRandomValue(-10, 10)*0.1, GetRandomValue(-10, 10)*0.1},
+			(Vector2){GetRandomValue(-10, 10)*0.1, GetRandomValue(-10, 10)*0.1},
+			(Vector2){GetRandomValue(-10, 10)*0.1, GetRandomValue(-10, 10)*0.1},
 			true
 		}; // Temp
 	}
