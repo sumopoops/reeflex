@@ -1,3 +1,4 @@
+### Main release
 - [x] Get animations system working
 - [x] Stop printing grid
 - [x] Make function for creating a new circle, return circle
@@ -20,17 +21,15 @@
 - [x] Better heart animation
 - [x] UpdateSprites needs to delete animation if it's not repeating
 - [x] Sprites no repeat + no anim properties full working
-- [ ] Move animations into Sprite pool
+- [x] Move animations into Sprite pool
 - [x] Array length variables
-- [ ] Load spritesheet inline? Or asset pack
 - [x] Better sounds
-- [ ] Refactor code, less asset creations
+- [x] Refactor code, less asset creations
 - [x] Show level reached on gameover screen
 - [x] Gameover death animation
 - [x] Game mode change transition effects
 - [x] Create struct to handle basic timers?
 - [x] Create world system and move to next level after screen cleared
-- [ ] Use release.bat for final build (Add butler support to script?)
 - [x] Disable controls during life loss animation
 - [x] Animation for enemy being killed?
 - [x] Black bar under life loss animations
@@ -43,7 +42,7 @@
 - [x] Gameover wipe flicker
 - [x] Show time played on gameover and/or show score that is calculated from level+time
 - [x] Bonus score for beating all 3 worlds
-- [ ] Ending animation for beating game
+- [x] Ending animation for beating game
 - [x] Refine scoring
 - [x] Fix alignment of score
 - [x] Score slide in from bottom?
@@ -62,32 +61,36 @@
 - [x] Use function pointers for animation ending action?
 - [x] Start on world 3 (Ideas?)
 - [x] Remove score entirely? (remove time as well)
-- [ ] Unload assets on quit
 - [x] World music mixing levels
 - [x] Make sure using malloc for Sprites array
 - [x] Short animation for switching worlds
-- [ ] Borderless fullscreen?
 - [x] Timer bar taller (2px instead of 1), shorten enemy count bar
 - [x] Play level start sound, start music after animation end
 - [x] World title stay on screen longer
 - [x] Animation repeat count? Hold last frame?
 - [x] Remove extra sprite frames (copy frames) and use delay parameter instead
 - [x] Adjust world change animation numbers
-- [ ] Enemy kill destroys random enemy instead of sequential
-- [ ] Remove dead code
-- [ ] Final track levels + intro song lower slightly
+- [x] Final track levels + intro song lower slightly
 - [x] Final track fix transition into ending
 - [x] Record World 2 to see if any enemies are changing randomly
 - [x] Test launch speed on laptop VS desktop, try older commit
 - [x] Silent pause before win track starts playin
 - [x] Loading screen before title to load assets (Progress bar?)
 - [x] Make sure press A animation is moving by pixels
-- [ ] Title song trail end abruptly
+- [x] Title song trail end abruptly
 - [x] Monitor fullscreen switch and see if its fixed on closing game
 - [x] Change winAnimPlaying to false, set Press A anim to play again, play intro song again
 - [x] Random seed
-- [ ] Make last hit for game not play, ending attack sound louder?
 - [x] Delay ending music slightly, or use sprite timing
 - [x] Final attack ogg
 - [x] Remove intro tail to ending music
-- [ ] Fix final attack animation and extend by 2 frames
+- [x] Fix final attack animation and extend by 2 frames
+- [x] Reset world 2+3 music on retry
+- [x] Unload assets on quit
+- [ ] Remove dead code, clean up code
+- [ ] Use release.bat for final build (Add butler support to script?)
+
+### Post launch
+- [ ] Load spritesheet inline? Or asset pack
+- [ ] Enemy kill destroys random enemy instead of sequential
+- [ ] Borderless fullscreen?

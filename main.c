@@ -542,11 +542,13 @@ int main() {
 					switch (world) {
 						case 2:
 							StopMusicStream(MUS_world1);
+							StopMusicStream(MUS_world2);
 							PlayMusicStream(MUS_world2);
 							WorldChangeAnim();
 							break;
 						case 3:
 							StopMusicStream(MUS_world2);
+							StopMusicStream(MUS_world3);
 							PlayMusicStream(MUS_world3);
 							WorldChangeAnim();
 							break;
@@ -554,7 +556,7 @@ int main() {
 							StopMusicStream(MUS_world3);
 							PlaySound(SND_final_attack);
 							gameMode = GAMEMODE_WIN;
-							sprites[20] = NewSprite((Rectangle){432, 0, 60, 60}, (Vector2){0, 0}, 8, false, 0.09, GameEnding, 0);
+							sprites[20] = NewSprite((Rectangle){432, 0, 60, 60}, (Vector2){0, 0}, 8, false, 0.07, GameEnding, 0);
 							break;
 					}
 
