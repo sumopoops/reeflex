@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define PIXEL_SIZE 0
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
 #define ENEMY_TYPE_COUNT 4
@@ -84,6 +83,7 @@ bool lightsOn = true;
 float invisTick = 0;
 float invisSwitch = INVIS_SWITCH_START;
 Triangle *triangles;
+float scale, playAreaX;
 
 
 
@@ -327,6 +327,15 @@ void PopulateTriangles() {
 	}
 }
 
+void SwitchFullscreen() {
+	SetWindowState(FLAG_WINDOW_UNDECORATED);
+	SetWindowSize(GetMonitorWidth(0), GetMonitorHeight(0));
+	SetWindowPosition(0, 0);
+	HideCursor();
+	scale = (float)GetScreenHeight()/screenHeight;
+	playAreaX = (float)(GetScreenWidth()-(screenWidth*scale))*0.5;
+}
+
 
 
 //---------------------------------------------------------------------------------------- MAIN
@@ -336,7 +345,6 @@ int main() {
 	// Variables
 	sprites = malloc(30*sizeof(Sprite));
 	triangles = malloc(30*sizeof(Triangle));
-	const char windowed = PIXEL_SIZE;
 	const float enemyAnimRate = 0.04;
 	float enemyAnimTick = 0;
 	int animFrame = 0;
@@ -355,19 +363,9 @@ int main() {
 	float shakeRate = 0.5;
 
 	// Init Window Stuff
-	float scale, playAreaX;
+	InitWindow(GetMonitorWidth(0), GetMonitorHeight(0), "REEFLX");
 	SetConfigFlags(FLAG_VSYNC_HINT);
-	if (windowed) {
-		InitWindow(screenWidth*windowed, screenHeight*windowed, "REEFLX");
-		scale = (float)windowed;
-		playAreaX = 0;
-	} else {
-		InitWindow(GetScreenWidth(), GetScreenHeight(), "REEFLX");
-		scale = (float)GetScreenHeight()/screenHeight;
-		playAreaX = (float)(GetScreenWidth()-(screenWidth*scale))*0.5;
-		ToggleFullscreen();
-		HideCursor();
-	}
+	SwitchFullscreen();
 
 	// Audio
 	InitAudioDevice();
@@ -682,7 +680,6 @@ int main() {
 	UnloadMusicStream(MUS_world3);
 	UnloadRenderTexture(target);
 
-	if (IsWindowFullscreen()) ToggleFullscreen();
     CloseWindow();
 
     return 0;

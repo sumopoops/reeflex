@@ -87,10 +87,10 @@
 - [x] Fix final attack animation and extend by 2 frames
 - [x] Reset world 2+3 music on retry
 - [x] Unload assets on quit
+- [x] Borderless fullscreen?
 - [ ] Remove dead code, clean up code
 - [ ] Use release.bat for final build (Add butler support to script?)
 
 ### Post launch
 - [ ] Load spritesheet inline? Or asset pack
 - [ ] Enemy kill destroys random enemy instead of sequential
-- [ ] Borderless fullscreen?
