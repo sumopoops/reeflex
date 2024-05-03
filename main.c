@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include <stdio.h>
 #include <stdlib.h>
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
@@ -126,12 +125,10 @@ void MoveEnemies(bool printResult) {
 				int moveDirX = GetRandomValue(-1, 1);
 				if (!moveDirX && !moveDirY) continue;
 				if (moveDirY+y < 0 || moveDirY+y > (GRID_HEIGHT-1) || moveDirX+x < 0 || moveDirX+x > (GRID_WIDTH-1)) {
-					if (printResult) printf("\e[30mX: %d Y: %d V: %d  \e[91m   X   \e[0m  \e[30mX: %d Y: %d V: %d\e[0m\n", x, y, grid[y][x], x+moveDirX, y+moveDirY, grid[y+moveDirY][x+moveDirX]);
 					// Move not allowed
 					continue;
 				}
 
-				if (printResult) printf("X: %d Y: %d V: %d  \e[95m<----->\e[0m  X: %d Y: %d V: %d\n", x, y, grid[y][x], x+moveDirX, y+moveDirY, grid[y+moveDirY][x+moveDirX]);
 				// If space is empty, move enemy there
 				if (grid[y+moveDirY][x+moveDirX] == 0) {
 					grid[y+moveDirY][x+moveDirX] = grid[y][x];
@@ -147,22 +144,6 @@ void MoveEnemies(bool printResult) {
 	}
 }
 
-void PrintGrid(bool clearScreen) {
-	printf("\n\e[33m____________________________________________\e[0m\n\n");
-	int explosions = 0;
-	if (clearScreen) printf("\033[2J\033[H");
-	for (int y=0; y<GRID_HEIGHT; y++) {
-		printf("\n");
-		for (int x=0; x<GRID_WIDTH; x++) {
-			grid[y][x] ? printf("\e[32m%d\e[0m ", grid[y][x]) : printf("%d ", grid[y][x]);
-			if (grid[y][x] == 5) explosions++;
-		}
-	}
-	printf("\n\nTYPES: \33[31m");
-	for (int i=0; i<ENEMY_TYPE_COUNT; i++) printf("%d ", types[i]);
-	printf("%d", explosions);
-	printf("\33[0m\n\n");
-}
 
 void DrawIconGrid(Texture2D sheet, int frame, Vector2 shakeVector) {
 	for (int y=0; y<GRID_HEIGHT; y++) {
