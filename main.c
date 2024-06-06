@@ -1,4 +1,5 @@
-#include "raylib.h"
+#include "sprites.h"
+#include "include/raylib.h"
 #include <stdlib.h>
 #define GRID_WIDTH 6
 #define GRID_HEIGHT 5
@@ -367,7 +368,8 @@ int main() {
 	Sprite SP_pressA = {{43, 61, 27, 5}, {16, 47}};
 
 	// Load assets
-	Texture2D TX_sprites = LoadTexture("img/sprites.png");
+	Image sprite_image = LoadImageFromMemory(".png", sprites_png, sprites_png_len);
+	Texture2D TX_sprites = LoadTextureFromImage(sprite_image);
 	Sound SND_bleep;
 	Sound SND_looseLife;
 	Sound SND_click;
